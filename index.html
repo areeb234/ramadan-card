@@ -3,76 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Form Submission to Power Automate</title>
+  <title>Form</title>
+
 </head>
 <body>
+<form id="maritalForm">
+  <label>Marital Status: <input type="text" name="marital_status" required></label><br>
 
-<h2>Submit Data to Power Automate</h2>
+  <h3>Husband's Details</h3>
+  <label>Full Name: <input type="text" name="husband_name" required></label><br>
+  <label>Phone Number: <input type="text" name="husband_phone" required></label><br>
+  <label>Email: <input type="text" name="husband_email" required></label><br>
+  <label>Emirates ID: <input type="text" name="husband_emirates_id" required></label><br>
+  <label>Expiry Date Emirates ID: <input type="date" name="husband_emirates_expiry" required></label><br>
+  <label>Salary: <input type="text" name="husband_salary" required></label><br>
 
-<form id="dataForm">
-  <label for="maritalStatus">Marital Status:</label>
-  <input type="text" id="maritalStatus" required><br>
+  <h3>Wife's Details</h3>
+  <label>Full Name: <input type="text" name="wife_name" required></label><br>
+  <label>Phone Number: <input type="text" name="wife_phone" required></label><br>
+  <label>Email: <input type="text" name="wife_email" required></label><br>
+  <label>Emirates ID: <input type="text" name="wife_emirates_id" required></label><br>
+  <label>Expire Date Emirates ID: <input type="date" name="wife_emirates_expiry" required></label><br>
+  <label>Salary: <input type="text" name="wife_salary" required></label><br>
 
-  <label for="fullNameHusband">Full Name of Husband:</label>
-  <input type="text" id="fullNameHusband" required><br>
-
-  <label for="phoneNumberHusband">Phone Number Husband:</label>
-  <input type="text" id="phoneNumberHusband" required><br>
-
-  <label for="emailHusband">Email Husband:</label>
-  <input type="email" id="emailHusband" required><br>
-
-  <label for="emiratesIdHusband">Emirates ID Husband:</label>
-  <input type="text" id="emiratesIdHusband" required><br>
-
-  <label for="expiryDateEmiratesIdHusband">Expiry Date Emirates ID Husband:</label>
-  <input type="date" id="expiryDateEmiratesIdHusband" required><br>
-
-  <label for="salaryHusband">Salary Husband:</label>
-  <input type="text" id="salaryHusband" required><br>
-
-  <label for="fullNameWife">Full Name of Wife:</label>
-  <input type="text" id="fullNameWife" required><br>
-
-  <label for="phoneNumberWife">Phone Number Wife:</label>
-  <input type="text" id="phoneNumberWife" required><br>
-
-  <label for="emailWife">Email Wife:</label>
-  <input type="email" id="emailWife" required><br>
-
-  <label for="emiratesIdWife">Emirates ID Wife:</label>
-  <input type="text" id="emiratesIdWife" required><br>
-
-  <label for="expiryDateEmiratesIdWife">Expiry Date Emirates ID Wife:</label>
-  <input type="date" id="expiryDateEmiratesIdWife" required><br>
-
-  <label for="salaryWife">Salary Wife:</label>
-  <input type="text" id="salaryWife" required><br>
-
-  <label for="emirates">Emirates:</label>
-  <input type="text" id="emirates" required><br>
-
-  <label for="homeAddress">Home Address:</label>
-  <input type="text" id="homeAddress" required><br>
-
-  <label for="comments">Comments:</label>
-  <textarea id="comments"></textarea><br>
-
-  <label for="nationality">Nationality:</label>
-  <input type="text" id="nationality" required><br>
-
-  <label for="status">Status:</label>
-  <input type="text" id="status" required><br>
-
-  <label for="submissionDate">Submission Date:</label>
-  <input type="date" id="submissionDate" required><br>
-
-  <label for="fileInput">Attachment (optional):</label>
-  <input type="file" id="fileInput"><br>
+  <label>Emirates: <input type="text" name="emirates" required></label><br>
+  <label>Home Address:<br><textarea name="home_address" rows="3" required></textarea></label><br>
+  <label>Comments:<br><textarea name="comments" rows="3"></textarea></label><br>
+  <label>Nationality: <input type="text" name="nationality" required></label><br>
 
   <button type="submit">Submit</button>
 </form>
-
-<script src="./js/app.js"></script>
 </body>
 </html>
