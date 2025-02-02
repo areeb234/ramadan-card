@@ -1,77 +1,74 @@
-document.getElementById('dataForm').addEventListener('submit', function (e) {
-  e.preventDefault();
+document.addEventListener("DOMContentLoaded", function () {
+
+  document.getElementById('dataForm').addEventListener('submit', function (e) {
+    e.preventDefault();
 
   // Get form inputs
+  function getValue(id) {
+    const element = document.getElementById(id);
+    return element ? element.value.trim() : "";
+  }
+
+  function getDateValue(id) {
+    const element = document.getElementById(id);
+    return element ? element.value : "";
+  }
+    const maritalStatus = getValue("maritalStatus");
+    const requiredFields = [];
+
+    if (maritalStatus === 'married') {
+      requiredFields.push("husbandName", "husbandPhoneNumber", "husbandEmail1", "husbandEmiratesID", "husbandExpiryDate", "husbandSalaryValue");
+    }
+
+    requiredFields.push("wifeName", "wifePhoneNumber", "wifeEmail", "wifeEmiratesID", "wifeExpiryDate", "wifeSalary");
+
+    // Check if required fields are filled
+    let isValid = true;
+    requiredFields.forEach(id => {
+      const field = document.getElementById(id);
+      if (field && !field.value.trim()) {
+        isValid = false;
+        field.classList.add("error"); // Add a red border or highlight (optional)
+      } else {
+        field.classList.remove("error");
+      }
+    });
+
+    if (!isValid) {
+      alert("Please fill in all required fields before submitting.");
+      return;
+    }
+
   const formData = {
     "Title": "Ramadan Food Card",
-    "MaritalStatus": getValue("MaritalStatus"),
-    "FullNameHusband": getValue("FullNameHusband"),
-    "PhoneNumberHusband": getValue("PhoneNumberHusband"),
-    "EmailHusband": getValue("EmailHusband"),
-    "EmiratesIDHusband": getValue("EmiratesIDHusband"),
-    "ExpiryDateEmiratesIDHusband": getDateValue("husband_emirates_expiry"),
-    "SalaryHusband": getValue("SalaryHusband"),
-    "FullNameWife": getValue("FullNameWife"),
-    "PhoneNumberWife": getValue("PhoneNumberWife"),
-    "EmailWife": getValue("EmailWife"),
-    "EmiratesIDWife": getValue("EmiratesIDWife"),
-    "ExpiryDateEmiratesIDWife": getDateValue("wife_emirates_expiry"),
-    "SalaryWife": getValue("SalaryWife"),
-    "Emirates": getValue("Emirates"),
-    "HomeAddress": getValue("HomeAddress"),
-    "Comments": getValue("Comments"),
-    "Nationality": getValue("Nationality"),
-    "Status": "Pending", // Defaulting to one of the valid enum values
+    "MaritalStatus": getValue("maritalStatus"),
+    "FullNameHusband": getValue("husbandName"),
+    "PhoneNumberHusband": getValue("husbandPhoneNumber"),
+    "EmailHusband": getValue("husbandEmail1"),
+    "EmiratesIDHusband": getValue("husbandEmiratesID"),
+    "ExpiryDateEmiratesIDHusband": getDateValue("husbandExpiryDate"),
+    "SalaryHusband": getValue("husbandSalaryValue"),
+    "FullNameWife": getValue("wifeName"),
+    "PhoneNumberWife": getValue("wifePhoneNumber"),
+    "EmailWife": getValue("wifeEmail"),
+    "EmiratesIDWife": getValue("wifeEmiratesID"),
+    "ExpiryDateEmiratesIDWife": getDateValue("wifeExpiryDate"),
+    "SalaryWife": getValue("wifeSalary"),
+    "HomeAddress": getValue("homeAddress"),
+    "Comments": getValue("comments"),
+    "Status": "Pending",
     "SubmissionDate": new Date().toISOString(),
   };
 
-  // Check if required fields are filled
-  if (!validateRequiredFields(formData)) {
-    alert("Please fill in all required fields correctly.");
-    return;
-  }
 
   // Debugging: Log the cleaned data before sending
   console.log("🚀 Data being sent to Power Automate:", JSON.stringify(formData));
 
   sendToPowerAutomate(formData);
-});
-function getDateValue(id) {
-  const element = document.getElementById(id);
-  return element ? new Date(element.value).toISOString() : "";
-}
+});});
 
-// Function to get field value
-function getValue(id) {
-  const element = document.getElementById(id);
-  return element ? element.value.trim() : "";
-}
 
-// Function to validate email format
-function validateEmail(email) {
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailPattern.test(email)) {
-    alert(`Invalid email: ${email}`);
-    return "";
-  }
-  return email;
-}
 
-// Function to remove non-numeric characters from number fields
-function cleanNumber(value) {
-  return value.replace(/\D/g, ""); // Remove all non-digit characters
-}
-
-// Function to check if required fields are filled
-function validateRequiredFields(data) {
-  for (const key in data) {
-    if (data[key] === "" && key !== "Comments") { // Comments can be optional
-      console.error(`Missing required field: ${key}`);
-      return false;
-    }
-  }
-  return true;
-}
 
 // Function to send data to Power Automate
 function sendToPowerAutomate(data) {
@@ -87,10 +84,180 @@ function sendToPowerAutomate(data) {
     .then(response => response.json())
     .then(data => {
       console.log('Success:', data);
-      alert('Data submitted successfully!');
     })
     .catch((error) => {
       console.error('Error:', error);
       alert('Error submitting data!');
     });
 }
+
+
+
+function toggleFields() {
+  const maritalStatus = document.getElementById('maritalStatus').value;
+
+  // Select all fields to toggle disabled
+  const allFields = document.querySelectorAll('input, select, textarea');
+
+  // If no marital status is selected, disable all fields and exit early
+  if (!maritalStatus) {
+    allFields.forEach(field => field.disabled = true);
+    document.getElementById('maritalStatus').disabled = false;
+    return;
+  }
+
+  // Reset all fields to their default state (disabled)
+  allFields.forEach(field => field.disabled = false);
+
+  // Get all husband fields
+  const husbandFields = document.querySelectorAll('#husbandDetails, #husbandPhone, #husbandEmail, #husbandID, #husbandExpiry, #husbandSalary');
+  const wifeFields = document.querySelectorAll('#wifeName, #wifePhoneNumber, #wifeEmail, #wifeEmiratesID, #wifeExpiryDate, #wifeSalary');
+  const commentsField = document.getElementById('comments');
+  const homeAddressField = document.getElementById('homeAddress');
+
+  homeAddressField.disabled = false;
+  commentsField.disabled = false;
+
+  // Reset the wife's label and placeholder names to default
+  const wifeLabelNames = {
+    'wifeName': 'Wife\'s Full Name',
+    'wifePhoneNumber': 'Wife\'s Phone Number',
+    'wifeEmail': 'Wife\'s Email',
+    'wifeEmiratesID': 'Wife\'s Emirates ID',
+    'wifeExpiryDate': 'Wife\'s Emirates ID Expiry',
+    'wifeSalary': 'Wife\'s Salary',
+  };
+
+  const wifePlaceholderNames = {
+    'wifeName': 'Enter wife\'s full name',
+    'wifePhoneNumber': 'Enter wife\'s phone number',
+    'wifeEmail': 'Enter wife\'s email',
+    'wifeEmiratesID': 'Enter wife\'s Emirates ID number',
+    'wifeExpiryDate': 'Enter wife\'s Emirates ID expiry date',
+    'wifeSalary': 'Enter wife\'s salary',
+  };
+
+  // Show/hide fields based on marital status
+  if (maritalStatus === 'married') {
+    // Show both Husband and Wife fields when married
+    husbandFields.forEach(field => {
+      field.closest('.input-box').style.display = 'block';
+      field.disabled = false;
+      field.setAttribute('required', 'true'); // Make required
+    });
+    wifeFields.forEach(field => {
+      field.closest('.input-box').style.display = 'block';
+      field.disabled = false;
+      field.setAttribute('required', 'true');
+    });
+
+    // Change wife's labels and placeholders to default
+    document.getElementById('wifeNameLabel').innerText = wifeLabelNames['wifeName'];
+    document.getElementById('wifePhoneNumberLabel').innerText = wifeLabelNames['wifePhoneNumber'];
+    document.getElementById('wifeEmailLabel').innerText = wifeLabelNames['wifeEmail'];
+    document.getElementById('wifeEmiratesIDLabel').innerText = wifeLabelNames['wifeEmiratesID'];
+    document.getElementById('wifeExpiryDateLabel').innerText = wifeLabelNames['wifeExpiryDate'];
+    document.getElementById('wifeSalaryLabel').innerText = wifeLabelNames['wifeSalary'];
+
+    // Reset placeholders to default
+    document.getElementById('wifeName').placeholder = wifePlaceholderNames['wifeName'];
+    document.getElementById('wifePhoneNumber').placeholder = wifePlaceholderNames['wifePhoneNumber'];
+    document.getElementById('wifeEmail').placeholder = wifePlaceholderNames['wifeEmail'];
+    document.getElementById('wifeEmiratesID').placeholder = wifePlaceholderNames['wifeEmiratesID'];
+    document.getElementById('wifeExpiryDate').placeholder = wifePlaceholderNames['wifeExpiryDate'];
+    document.getElementById('wifeSalary').placeholder = wifePlaceholderNames['wifeSalary'];
+  } else {
+
+    // Hide husband fields for single, widowed, or divorced
+    husbandFields.forEach(field => {
+      field.removeAttribute('required');
+      field.closest('.input-box').style.display = 'none';
+      field.disabled = true;
+    });
+
+    // Ensure wife fields are visible and enabled
+    wifeFields.forEach(field => {
+      field.closest('.input-box').style.display = 'block';
+      field.disabled = false;
+      field.setAttribute('required', 'true');
+    });
+
+
+    // Change wife fields' labels and placeholders to "Your"
+    document.getElementById('wifeNameLabel').innerText = 'Your Full Name';
+    document.getElementById('wifePhoneNumberLabel').innerText = 'Your Phone Number';
+    document.getElementById('wifeEmailLabel').innerText = 'Your Email';
+    document.getElementById('wifeEmiratesIDLabel').innerText = 'Your Emirates ID Number';
+    document.getElementById('wifeExpiryDateLabel').innerText = 'Emirates ID Expiry Date';
+    document.getElementById('wifeSalaryLabel').innerText = 'Your Salary';
+
+    document.getElementById('wifeName').placeholder = 'Enter your full name';
+    document.getElementById('wifePhoneNumber').placeholder = 'Enter your phone number';
+    document.getElementById('wifeEmail').placeholder = 'Enter your email';
+    document.getElementById('wifeEmiratesID').placeholder = 'Enter your Emirates ID number';
+    document.getElementById('wifeExpiryDate').placeholder = 'Enter your Emirates ID expiry date';
+    document.getElementById('wifeSalary').placeholder = 'Enter your salary';
+  }
+
+}
+function handleAttachments() {
+  const attachmentInput = document.getElementById("attachments");
+  const attachmentError = document.getElementById("attachmentError");
+  const attachmentList = document.getElementById("attachmentList");
+  const files = attachmentInput.files;
+
+  // Validate file count
+  if (files.length > 8) {
+    attachmentError.style.display = "block";
+    attachmentInput.setCustomValidity("You can only upload up to 8 files.");
+  } else {
+    attachmentError.style.display = "none";
+    attachmentInput.setCustomValidity("");
+  }
+
+  // Clear the previous attachment list
+  attachmentList.innerHTML = '';
+
+  // Loop through each file and display its name with a remove button
+  Array.from(files).forEach((file, index) => {
+    const fileDiv = document.createElement("div");
+    fileDiv.classList.add("file-item");
+    fileDiv.style.marginBottom = "5px"; // Optional styling
+
+    const fileName = document.createElement("span");
+    fileName.textContent = file.name;
+
+    const removeButton = document.createElement("button");
+    removeButton.textContent = "❌";
+    removeButton.style.marginLeft = "10px";
+    removeButton.style.color = "red";
+    removeButton.style.border = "none";
+    removeButton.style.background = "none";
+    removeButton.style.cursor = "pointer";
+    removeButton.onclick = () => removeAttachment(file, index);
+
+    fileDiv.appendChild(fileName);
+    fileDiv.appendChild(removeButton);
+    attachmentList.appendChild(fileDiv);
+  });
+}
+
+function removeAttachment(file, index) {
+  const attachmentInput = document.getElementById("attachments");
+  const dataTransfer = new DataTransfer(); // To handle file list manipulation
+
+  // Loop through the current files and re-add to DataTransfer except the file to remove
+  Array.from(attachmentInput.files).forEach((f, i) => {
+    if (i !== index) {
+      dataTransfer.items.add(f);
+    }
+  });
+
+  // Update the input with the modified file list
+  attachmentInput.files = dataTransfer.files;
+
+  // Refresh the displayed list
+  handleAttachments();
+}
+
+

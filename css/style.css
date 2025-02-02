@@ -15,8 +15,12 @@ body {
   justify-content: center;
   align-items: center;
   padding: 10px;
-  background: linear-gradient(135deg, #0c1445, #1e2952, #3b5998); /* Deep blue shades */
+  background: linear-gradient(to right, #4b2a2a, #f1c27d); /* Soft maroon to light gold gradient */
+  color: #fff; /* White text for readability */
+  font-family: 'Arial', sans-serif; /* Choose a readable font */
 }
+
+
 
 /* Form Container */
 .container {
@@ -33,16 +37,17 @@ body {
 /* Header Wrapper */
 .header {
   display: flex;
+  flex-direction: column; /* Stack elements vertically */
   align-items: center;
   justify-content: center;
-  gap: 15px; /* Space between logo and title */
-  margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 0px;
 }
 
 /* Logo Styling */
-.logo img {
-  max-width: 150px; /* Adjust size */
-  height: auto;
+.logo {
+  width: 150px; /* Adjust size */
+  height: 150px;
 }
 
 /* Title Section */
@@ -50,16 +55,21 @@ body {
   font-size: 26px;
   font-weight: 700;
   color: #d4af37; /* Gold color */
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
+
 
 /* Crescent Moon Icon */
 .title::before {
-  content: "🌙";
+  content: "🌙 ";
   font-size: 26px;
   display: inline-block;
+}
+/* Content Section Styling */
+.content {
+  border: 2px solid #d4af37; /* Golden border */
+  border-radius: 12px; /* Rounded corners */
+  padding: 20px; /* Space inside the border */
+  background-color: #fff; /* Background color for the content */
 }
 
 /* Scrollable Form */
@@ -84,12 +94,12 @@ body {
 }
 
 .content form .user-details::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #d4af37, #9b59b6); /* Golden and purple mix */
+  background: linear-gradient(135deg, #d4af37, #d4af37); /* Golden and purple mix */
   border-radius: 10px;
 }
 
 .content form .user-details::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(-135deg, #d4af37, #9b59b6);
+  background: linear-gradient(-135deg, #d4af37, #d4af37);
 }
 
 /* Input Box Styling */
@@ -183,9 +193,6 @@ form .button input:hover {
     text-align: center;
   }
 
-  .logo img {
-    max-width: 140px;
-  }
 
   .title {
     font-size: 22px;

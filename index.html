@@ -3,109 +3,114 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SMART-PAD Food Cart Form</title>
-  <link rel="stylesheet" href="css/style.css">  
+  <title>SMART-PAD Food Card Form</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/app.js"></script>
 </head>
 <body>
-  <div class="container">
-    <!-- Header with Logo and Title -->
-    <div class="header">
-      <img src="img/logo.png" alt="Smart-PAD Logo" class="logo">
-      <div class="title">Ramadan Food Cart</div>
-    </div>
-
-    <div class="content">
-      <form action="#">
-        <div class="user-details">
-          <!-- Marital Status Dropdown -->
-          <div class="input-box">
-            <span class="details">Marital Status</span>
-            <select required>
-                <option value="" disabled selected>Select marital status</option>
-                <option value="single">Single</option>
-                <option value="married">Married</option>
-                <option value="widowed">Widowed</option>
-                <option value="divorced">Divorced</option>
-            </select>
-          </div>
-          
-          <!-- Husband's Details -->
-          <div class="input-box">
-            <span class="details">Husband's Full Name</span>
-            <input type="text" placeholder="Enter husband's name" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Husband's Phone Number</span>
-            <input type="text" placeholder="Enter husband's number" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Husband's Email</span>
-            <input type="text" placeholder="Enter husband's email" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Husband's Emirates ID</span>
-            <input type="text" placeholder="Enter husband's Emirates ID" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Husband's Emirates ID Expiry</span>
-            <input type="date" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Husband's Salary</span>
-            <input type="text" placeholder="Enter husband's salary" required>
-          </div>
-
-          <!-- Wife's Details -->
-          <div class="input-box">
-            <span class="details">Wife's Full Name</span>
-            <input type="text" placeholder="Enter wife's name" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Wife's Phone Number</span>
-            <input type="text" placeholder="Enter wife's number" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Wife's Email</span>
-            <input type="text" placeholder="Enter wife's email" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Wife's Emirates ID</span>
-            <input type="text" placeholder="Enter wife's Emirates ID" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Wife's Emirates ID Expiry</span>
-            <input type="date" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Wife's Salary</span>
-            <input type="text" placeholder="Enter wife's salary" required>
-          </div>
-
-          <!-- Additional Information -->
-          <div class="input-box">
-            <span class="details">Home Address</span>
-            <input type="text" placeholder="Enter home address">
-          </div>
-          <div class="input-box">
-            <span class="details">Comments</span>
-            <textarea placeholder="Enter any comments"></textarea>
-          </div>
-          <div class="input-box">
-            <span class="details">Nationality</span>
-            <select required>
-                <option value="" disabled selected>Select Nationality</option>
-                <option value="pakistani">Pakistani</option>
-                <option value="other">Other</option>
-            </select>
-          </div>
-        </div>
-        
-        <!-- Submit Button -->
-        <div class="button">
-          <input type="submit" value="Submit">
-        </div>
-      </form>
-    </div>
+<div class="container">
+  <div class="header">
+    <img src="img/padlogo2.png" alt="Smart-PAD Logo" class="logo">
+    <div class="title">Ramadan Food Card</div>
   </div>
+
+  <div class="content">
+    <form action="#" id="dataForm">
+      <div class="user-details">
+        <div class="input-box">
+          <span class="details">Marital Status</span>
+          <select name="maritalStatus"  required onchange="toggleFields()" id="maritalStatus">
+            <option value="" >Select marital status</option>
+            <option value="single">Single</option>
+            <option value="married">Married</option>
+            <option value="widowed">Widowed</option>
+            <option value="divorced">Divorced</option>
+          </select>
+        </div>
+
+        <!-- Husband's Details -->
+        <div class="input-box" id="husbandDetails">
+          <span class="details">Husband's Full Name</span>
+          <input type="text" placeholder="Enter husband's name"  id="husbandName">
+        </div>
+        <div class="input-box" id="husbandPhone">
+          <span class="details">Husband's Phone Number</span>
+          <input type="text" placeholder="Enter husband's number"  id="husbandPhoneNumber">
+        </div>
+        <div class="input-box" id="husbandEmail">
+          <span class="details">Husband's Email</span>
+          <input type="text" placeholder="Enter husband's email"  id="husbandEmail1">
+        </div>
+        <div class="input-box" id="husbandID">
+          <span class="details">Husband's Emirates ID</span>
+          <input type="text" placeholder="Enter husband's Emirates ID"  id="husbandEmiratesID">
+        </div>
+        <div class="input-box" id="husbandExpiry">
+          <span class="details">Husband's Emirates ID Expiry</span>
+          <input type="date"  id="husbandExpiryDate">
+        </div>
+        <div class="input-box" id="husbandSalary">
+          <span class="details">Husband's Salary</span>
+          <input type="text" placeholder="Enter husband's salary"  id="husbandSalaryValue">
+        </div>
+
+        <!-- Wife's Details -->
+        <div class="input-box">
+          <span class="details" id="wifeNameLabel">Wife's Full Name</span>
+          <input type="text" id="wifeName" placeholder="Enter wife's name" required>
+        </div>
+        <div class="input-box">
+          <span class="details" id="wifePhoneNumberLabel">Wife's Phone Number</span>
+          <input type="text" id="wifePhoneNumber" placeholder="Enter wife's number" required>
+        </div>
+        <div class="input-box">
+          <span class="details" id="wifeEmailLabel">Wife's Email</span>
+          <input type="text" id="wifeEmail" placeholder="Enter wife's email" required>
+        </div>
+        <div class="input-box">
+          <span class="details" id="wifeEmiratesIDLabel">Wife's Emirates ID</span>
+          <input type="text" id="wifeEmiratesID" placeholder="Enter wife's Emirates ID" required>
+        </div>
+        <div class="input-box">
+          <span class="details" id="wifeExpiryDateLabel">Wife's Emirates ID Expiry</span>
+          <input type="date" id="wifeExpiryDate" required>
+        </div>
+        <div class="input-box">
+          <span class="details" id="wifeSalaryLabel">Wife's Salary</span>
+          <input type="text" id="wifeSalary" placeholder="Enter wife's salary" required>
+        </div>
+
+        <!-- Additional Information -->
+        <div class="input-box">
+          <span class="details">Home Address</span>
+          <input type="text" placeholder="Enter home address" id="homeAddress">
+        </div>
+        <!-- Additional Information -->
+        <div class="input-box" style="width: 100%;">
+          <span class="details">Comments</span>
+          <textarea placeholder="Enter any comments" id="comments" style="width: 100%;"></textarea>
+        </div>
+
+        <!-- Attachments Section -->
+        <div class="input-box" style="width: 100%;">
+        <span class="details">Attachments (Max 8 files)<br>
+          Husband's & Wife's Emirates ID (Front And Back) <br>
+          Husband's & Wife's Salary Certificate
+        </span>
+          <input type="file" id="attachments" name="attachments" accept="image/*,application/pdf,.docx,.xlsx" multiple required onchange="handleAttachments()">
+          <p id="attachmentError" style="color: red; display: none;">You can only upload up to 8 files.</p>
+          <div id="attachmentList" style="color:black; margin-top: 10px;"></div> <!-- Container for showing selected files -->
+        </div>
+
+
+
+      </div>
+
+      <div class="button">
+        <input type="submit" value="Submit">
+      </div>
+    </form>
+  </div>
+</div>
 </body>
 </html>
