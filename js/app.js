@@ -261,3 +261,22 @@ function removeAttachment(file, index) {
 }
 
 
+function checkNationality() {
+  const nationality = document.querySelector('input[name="nationality"]:checked').value;
+  const container = document.querySelector('.container');
+  const nationalityMessage = document.querySelector('#nationalityMessage');
+  const formContent = document.querySelector('#content');
+  const nationalitySelection = document.querySelector('#nationalitySelection');
+
+  // Hide nationality selection after a choice is made
+  nationalitySelection.style.display = 'none';
+
+  if (nationality === 'pakistani') {
+    nationalityMessage.style.display = 'none';  // Hide message
+    formContent.style.display = 'block';  // Show form content
+  } else {
+    nationalityMessage.style.display = 'block';  // Show message
+    formContent.style.display = 'none';  // Hide form content
+  }
+}
+

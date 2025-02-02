@@ -13,8 +13,23 @@
     <img src="img/padlogo2.png" alt="Smart-PAD Logo" class="logo">
     <div class="title">Ramadan Food Card</div>
   </div>
+  <div style="color: black" id="nationalitySelection">
+    <h3>Select Your Nationality</h3>
+    <label style="margin-right: 10px">
+      <input type="radio" name="nationality" value="pakistani" onclick="checkNationality()"> Pakistani
+    </label>
+    <label>
+      <input type="radio" name="nationality" value="others" onclick="checkNationality()"> Others
+    </label>
+  </div>
 
-  <div class="content">
+  <!-- Message to show if not Pakistani -->
+  <div id="nationalityMessage" style="color: red; display: none;">
+    Sorry, this form is only available for Pakistani nationals.
+  </div>
+
+
+  <div id="content" class="content" style="display: none;">
     <form action="#" id="dataForm">
       <div class="user-details">
         <div class="input-box">
