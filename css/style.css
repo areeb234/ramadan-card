@@ -1,52 +1,111 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMART-PAD Food Cart Form</title>
+  <link rel="stylesheet" href="css/style.css">  
+</head>
+<body>
+  <div class="container">
+    <!-- Header with Logo and Title -->
+    <div class="header">
+      <img src="img/logo.png" alt="Smart-PAD Logo" class="logo">
+      <div class="title">Ramadan Food Cart</div>
+    </div>
 
-h1 {
-  color: #333;
-}
+    <div class="content">
+      <form action="#">
+        <div class="user-details">
+          <!-- Marital Status Dropdown -->
+          <div class="input-box">
+            <span class="details">Marital Status</span>
+            <select required>
+                <option value="" disabled selected>Select marital status</option>
+                <option value="single">Single</option>
+                <option value="married">Married</option>
+                <option value="widowed">Widowed</option>
+                <option value="divorced">Divorced</option>
+            </select>
+          </div>
+          
+          <!-- Husband's Details -->
+          <div class="input-box">
+            <span class="details">Husband's Full Name</span>
+            <input type="text" placeholder="Enter husband's name" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Husband's Phone Number</span>
+            <input type="text" placeholder="Enter husband's number" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Husband's Email</span>
+            <input type="text" placeholder="Enter husband's email" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Husband's Emirates ID</span>
+            <input type="text" placeholder="Enter husband's Emirates ID" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Husband's Emirates ID Expiry</span>
+            <input type="date" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Husband's Salary</span>
+            <input type="text" placeholder="Enter husband's salary" required>
+          </div>
 
-form {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
-  width: 100%;
-}
+          <!-- Wife's Details -->
+          <div class="input-box">
+            <span class="details">Wife's Full Name</span>
+            <input type="text" placeholder="Enter wife's name" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Wife's Phone Number</span>
+            <input type="text" placeholder="Enter wife's number" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Wife's Email</span>
+            <input type="text" placeholder="Enter wife's email" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Wife's Emirates ID</span>
+            <input type="text" placeholder="Enter wife's Emirates ID" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Wife's Emirates ID Expiry</span>
+            <input type="date" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Wife's Salary</span>
+            <input type="text" placeholder="Enter wife's salary" required>
+          </div>
 
-form label {
-  display: block;
-  margin: 10px 0 5px;
-  color: #555;
-}
-
-form input, form textarea, form button {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-form button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-form button:hover {
-  background-color: #0056b3;
-}
-
-#responseMessage {
-  margin-top: 20px;
-  color: green;
-}
+          <!-- Additional Information -->
+          <div class="input-box">
+            <span class="details">Home Address</span>
+            <input type="text" placeholder="Enter home address">
+          </div>
+          <div class="input-box">
+            <span class="details">Comments</span>
+            <textarea placeholder="Enter any comments"></textarea>
+          </div>
+          <div class="input-box">
+            <span class="details">Nationality</span>
+            <select required>
+                <option value="" disabled selected>Select Nationality</option>
+                <option value="pakistani">Pakistani</option>
+                <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="button">
+          <input type="submit" value="Submit">
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
