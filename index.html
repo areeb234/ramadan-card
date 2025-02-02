@@ -3,35 +3,109 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Form</title>
-
+  <title>SMART-PAD Food Cart Form</title>
+  <link rel="stylesheet" href="css/style.css">  
 </head>
 <body>
-<form id="maritalForm">
-  <label>Marital Status: <input type="text" name="marital_status" required></label><br>
+  <div class="container">
+    <!-- Header with Logo and Title -->
+    <div class="header">
+      <img src="img/logo.png" alt="Smart-PAD Logo" class="logo">
+      <div class="title">Ramadan Food Cart</div>
+    </div>
 
-  <h3>Husband's Details</h3>
-  <label>Full Name: <input type="text" name="husband_name" required></label><br>
-  <label>Phone Number: <input type="text" name="husband_phone" required></label><br>
-  <label>Email: <input type="text" name="husband_email" required></label><br>
-  <label>Emirates ID: <input type="text" name="husband_emirates_id" required></label><br>
-  <label>Expiry Date Emirates ID: <input type="date" name="husband_emirates_expiry" required></label><br>
-  <label>Salary: <input type="text" name="husband_salary" required></label><br>
+    <div class="content">
+      <form action="#">
+        <div class="user-details">
+          <!-- Marital Status Dropdown -->
+          <div class="input-box">
+            <span class="details">Marital Status</span>
+            <select required>
+                <option value="" disabled selected>Select marital status</option>
+                <option value="single">Single</option>
+                <option value="married">Married</option>
+                <option value="widowed">Widowed</option>
+                <option value="divorced">Divorced</option>
+            </select>
+          </div>
+          
+          <!-- Husband's Details -->
+          <div class="input-box">
+            <span class="details">Husband's Full Name</span>
+            <input type="text" placeholder="Enter husband's name" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Husband's Phone Number</span>
+            <input type="text" placeholder="Enter husband's number" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Husband's Email</span>
+            <input type="text" placeholder="Enter husband's email" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Husband's Emirates ID</span>
+            <input type="text" placeholder="Enter husband's Emirates ID" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Husband's Emirates ID Expiry</span>
+            <input type="date" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Husband's Salary</span>
+            <input type="text" placeholder="Enter husband's salary" required>
+          </div>
 
-  <h3>Wife's Details</h3>
-  <label>Full Name: <input type="text" name="wife_name" required></label><br>
-  <label>Phone Number: <input type="text" name="wife_phone" required></label><br>
-  <label>Email: <input type="text" name="wife_email" required></label><br>
-  <label>Emirates ID: <input type="text" name="wife_emirates_id" required></label><br>
-  <label>Expire Date Emirates ID: <input type="date" name="wife_emirates_expiry" required></label><br>
-  <label>Salary: <input type="text" name="wife_salary" required></label><br>
+          <!-- Wife's Details -->
+          <div class="input-box">
+            <span class="details">Wife's Full Name</span>
+            <input type="text" placeholder="Enter wife's name" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Wife's Phone Number</span>
+            <input type="text" placeholder="Enter wife's number" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Wife's Email</span>
+            <input type="text" placeholder="Enter wife's email" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Wife's Emirates ID</span>
+            <input type="text" placeholder="Enter wife's Emirates ID" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Wife's Emirates ID Expiry</span>
+            <input type="date" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Wife's Salary</span>
+            <input type="text" placeholder="Enter wife's salary" required>
+          </div>
 
-  <label>Emirates: <input type="text" name="emirates" required></label><br>
-  <label>Home Address:<br><textarea name="home_address" rows="3" required></textarea></label><br>
-  <label>Comments:<br><textarea name="comments" rows="3"></textarea></label><br>
-  <label>Nationality: <input type="text" name="nationality" required></label><br>
-
-  <button type="submit">Submit</button>
-</form>
+          <!-- Additional Information -->
+          <div class="input-box">
+            <span class="details">Home Address</span>
+            <input type="text" placeholder="Enter home address">
+          </div>
+          <div class="input-box">
+            <span class="details">Comments</span>
+            <textarea placeholder="Enter any comments"></textarea>
+          </div>
+          <div class="input-box">
+            <span class="details">Nationality</span>
+            <select required>
+                <option value="" disabled selected>Select Nationality</option>
+                <option value="pakistani">Pakistani</option>
+                <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="button">
+          <input type="submit" value="Submit">
+        </div>
+      </form>
+    </div>
+  </div>
 </body>
 </html>
