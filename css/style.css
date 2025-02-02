@@ -1,111 +1,211 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SMART-PAD Food Cart Form</title>
-  <link rel="stylesheet" href="css/style.css">  
-</head>
-<body>
-  <div class="container">
-    <!-- Header with Logo and Title -->
-    <div class="header">
-      <img src="img/logo.png" alt="Smart-PAD Logo" class="logo">
-      <div class="title">Ramadan Food Cart</div>
-    </div>
+/* Importing Google Fonts - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
 
-    <div class="content">
-      <form action="#">
-        <div class="user-details">
-          <!-- Marital Status Dropdown -->
-          <div class="input-box">
-            <span class="details">Marital Status</span>
-            <select required>
-                <option value="" disabled selected>Select marital status</option>
-                <option value="single">Single</option>
-                <option value="married">Married</option>
-                <option value="widowed">Widowed</option>
-                <option value="divorced">Divorced</option>
-            </select>
-          </div>
-          
-          <!-- Husband's Details -->
-          <div class="input-box">
-            <span class="details">Husband's Full Name</span>
-            <input type="text" placeholder="Enter husband's name" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Husband's Phone Number</span>
-            <input type="text" placeholder="Enter husband's number" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Husband's Email</span>
-            <input type="text" placeholder="Enter husband's email" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Husband's Emirates ID</span>
-            <input type="text" placeholder="Enter husband's Emirates ID" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Husband's Emirates ID Expiry</span>
-            <input type="date" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Husband's Salary</span>
-            <input type="text" placeholder="Enter husband's salary" required>
-          </div>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
 
-          <!-- Wife's Details -->
-          <div class="input-box">
-            <span class="details">Wife's Full Name</span>
-            <input type="text" placeholder="Enter wife's name" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Wife's Phone Number</span>
-            <input type="text" placeholder="Enter wife's number" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Wife's Email</span>
-            <input type="text" placeholder="Enter wife's email" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Wife's Emirates ID</span>
-            <input type="text" placeholder="Enter wife's Emirates ID" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Wife's Emirates ID Expiry</span>
-            <input type="date" required>
-          </div>
-          <div class="input-box">
-            <span class="details">Wife's Salary</span>
-            <input type="text" placeholder="Enter wife's salary" required>
-          </div>
+/* Ramadan-Themed Background */
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background: linear-gradient(135deg, #0c1445, #1e2952, #3b5998); /* Deep blue shades */
+}
 
-          <!-- Additional Information -->
-          <div class="input-box">
-            <span class="details">Home Address</span>
-            <input type="text" placeholder="Enter home address">
-          </div>
-          <div class="input-box">
-            <span class="details">Comments</span>
-            <textarea placeholder="Enter any comments"></textarea>
-          </div>
-          <div class="input-box">
-            <span class="details">Nationality</span>
-            <select required>
-                <option value="" disabled selected>Select Nationality</option>
-                <option value="pakistani">Pakistani</option>
-                <option value="other">Other</option>
-            </select>
-          </div>
-        </div>
-        
-        <!-- Submit Button -->
-        <div class="button">
-          <input type="submit" value="Submit">
-        </div>
-      </form>
-    </div>
-  </div>
-</body>
-</html>
+/* Form Container */
+.container {
+  max-width: 720px;
+  width: 100%;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  border: 2px solid #d4af37; /* Golden outline */
+  text-align: center;
+}
+
+/* Header Wrapper */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px; /* Space between logo and title */
+  margin-bottom: 20px;
+}
+
+/* Logo Styling */
+.logo img {
+  max-width: 150px; /* Adjust size */
+  height: auto;
+}
+
+/* Title Section */
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #d4af37; /* Gold color */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Crescent Moon Icon */
+.title::before {
+  content: "🌙";
+  font-size: 26px;
+  display: inline-block;
+}
+
+/* Scrollable Form */
+.content form .user-details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px 0;
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+/* Ramadan-Themed Scrollbar */
+.content form .user-details::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content form .user-details::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.content form .user-details::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #d4af37, #9b59b6); /* Golden and purple mix */
+  border-radius: 10px;
+}
+
+.content form .user-details::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(-135deg, #d4af37, #9b59b6);
+}
+
+/* Input Box Styling */
+form .user-details .input-box {
+  margin-bottom: 15px;
+  width: calc(100% / 2 - 10px);
+  text-align: left;
+}
+
+/* Input Field Labels */
+form .input-box span.details {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+/* Input Fields */
+.user-details .input-box input,
+.user-details .input-box select,
+.user-details .input-box textarea {
+  height: 50px;
+  width: 100%;
+  outline: none;
+  font-size: 16px;
+  border-radius: 8px;
+  padding-left: 15px;
+  border: 2px solid #d4af37;
+  transition: all 0.3s ease;
+}
+
+/* Textarea Styling */
+.user-details .input-box textarea {
+  height: 80px;
+  padding-top: 10px;
+  resize: none;
+}
+
+/* Input Field Focus Effect */
+.user-details .input-box input:focus,
+.user-details .input-box select:focus,
+.user-details .input-box textarea:focus {
+  border-color: #9b59b6;
+  background: #fdf8e4;
+}
+
+/* Dropdown Styling */
+.user-details .input-box select {
+  cursor: pointer;
+  background: #fff;
+  color: #333;
+}
+
+/* Enhanced Submit Button */
+form .button {
+  height: 55px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+form .button input {
+  height: 100%;
+  width: 50%;
+  border-radius: 25px;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #d4af37, #9b59b6);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Hover Effect for Button */
+form .button input:hover {
+  background: linear-gradient(-135deg, #d4af37, #9b59b6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive Design */
+@media(max-width: 584px) {
+  .container {
+    max-width: 100%;
+    padding: 20px;
+  }
+
+  .header {
+    flex-direction: column; /* Stack logo and title on small screens */
+    text-align: center;
+  }
+
+  .logo img {
+    max-width: 140px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .title::before {
+    font-size: 26px;
+  }
+
+  form .user-details .input-box {
+    width: 100%;
+  }
+
+  .content form .user-details {
+    max-height: 300px;
+  }
+}
+
+@media(max-width: 459px) {
+  .container .content .category {
+    flex-direction: column;
+  }
+}
