@@ -1,8 +1,21 @@
 document.addEventListener("DOMContentLoaded", function () {
 
+
+  disableAllFields();  // Assuming this function handles the disabling of the fields
+
+  // Marital status field is the only one enabled initially
+  const maritalStatus = document.getElementById('maritalStatus');
+  maritalStatus.disabled = false
+  const nationality = document.getElementById('paknation');
+  nationality.disabled = false
+  const other  = document.getElementById('othernation');
+  other.disabled = false
+
   document.getElementById('dataForm').addEventListener('submit', function (e) {
     e.preventDefault();
-
+    document.getElementById('content').style.display = 'none';
+    // Show the thank you message
+    document.getElementById('thankYouMessage').style.display = 'block';
   // Get form inputs
   function getValue(id) {
     const element = document.getElementById(id);
@@ -280,3 +293,7 @@ function checkNationality() {
   }
 }
 
+function disableAllFields() {
+  const allFields = document.querySelectorAll('input, select, textarea');
+  allFields.forEach(field => field.disabled = true);
+}
