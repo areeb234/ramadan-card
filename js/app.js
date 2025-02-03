@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
         convertToBase64(file).then(base64Content => {
           formData.Attachments.push({
             "fileName": file.name,
-            "fileContent": base64Content
+            "fileContent": ensurePadding(base64Content)
           });
 
           // Send data once all attachments are converted
@@ -331,4 +331,10 @@ function convertToBase64(file) {
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+}
+function ensurePadding(base64) {
+  while (base64.length % 4 !== 0) {
+    base64 += "=";
+  }
+  return base64;
 }
