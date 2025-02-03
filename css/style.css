@@ -256,3 +256,31 @@ form .button input:hover {
   margin-bottom: 10px;
   display: none; /* Initially hidden */
 }
+.input-box {
+  width: 100%;}
+
+  .attachment-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 40px; /* Space between columns */
+    row-gap: 35px; /* Space between rows */
+  }
+  .attachment-container div {
+    display: flex;
+    flex-direction: column;
+  }
+  .attachment-container label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  .attachment-container input {
+    width: 100%;
+  }
+
+  /* Media query for smaller screens */
+  @media (max-width: 768px) {
+    .attachment-container {
+      grid-template-columns: 1fr; /* Single column layout */
+      column-gap: 0; /* Remove space between columns on small screens */
+    }
+  }

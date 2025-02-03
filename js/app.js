@@ -26,15 +26,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // Get form inputs
-  function getValue(id) {
-    const element = document.getElementById(id);
-    return element ? element.value.trim() : "";
-  }
+    function getValue(id) {
+      const element = document.getElementById(id);
+      return element ? element.value.trim() : "";
+    }
 
-  function getDateValue(id) {
-    const element = document.getElementById(id);
-    return element ? element.value : "";
-  }
+    function getDateValue(id) {
+      const element = document.getElementById(id);
+      return element ? element.value : "";
+    }
+
     const maritalStatus = getValue("maritalStatus");
     const requiredFields = [];
 
@@ -61,59 +62,74 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-  const formData = {
-    "Title": "Ramadan Food Card",
-    "MaritalStatus": getValue("maritalStatus"),
-    "FullNameHusband": getValue("husbandName"),
-    "PhoneNumberHusband": getValue("husbandPhoneNumber"),
-    "EmailHusband": getValue("husbandEmail1"),
-    "EmiratesIDHusband": getValue("husbandEmiratesID"),
-    "ExpiryDateEmiratesIDHusband": getDateValue("husbandExpiryDate"),
-    "SalaryHusband": getValue("husbandSalaryValue"),
-    "FullNameWife": getValue("wifeName"),
-    "PhoneNumberWife": getValue("wifePhoneNumber"),
-    "EmailWife": getValue("wifeEmail"),
-    "EmiratesIDWife": getValue("wifeEmiratesID"),
-    "ExpiryDateEmiratesIDWife": getDateValue("wifeExpiryDate"),
-    "SalaryWife": getValue("wifeSalary"),
-    "HomeAddress": getValue("homeAddress"),
-    "Comments": getValue("comments"),
-    "Status": "Pending",
-    "SubmissionDate": new Date().toISOString(),
-    "Attachments": []  // This will hold the Base64-encoded attachments
-  };
+    const formData = {
+      "Title": "Ramadan Food Card",
+      "MaritalStatus": getValue("maritalStatus"),
+      "FullNameHusband": getValue("husbandName"),
+      "PhoneNumberHusband": getValue("husbandPhoneNumber"),
+      "EmailHusband": getValue("husbandEmail1"),
+      "EmiratesIDHusband": getValue("husbandEmiratesID"),
+      "ExpiryDateEmiratesIDHusband": getDateValue("husbandExpiryDate"),
+      "SalaryHusband": getValue("husbandSalaryValue"),
+      "FullNameWife": getValue("wifeName"),
+      "PhoneNumberWife": getValue("wifePhoneNumber"),
+      "EmailWife": getValue("wifeEmail"),
+      "EmiratesIDWife": getValue("wifeEmiratesID"),
+      "ExpiryDateEmiratesIDWife": getDateValue("wifeExpiryDate"),
+      "SalaryWife": getValue("wifeSalary"),
+      "HomeAddress": getValue("homeAddress"),
+      "Comments": getValue("comments"),
+      "Status": "Pending",
+      "SubmissionDate": new Date().toISOString(),
+      "Attachments": []  // This will hold the Base64-encoded attachments
+    };
 
 
-  // Debugging: Log the cleaned data before sending
-    // Handle attachments
-    const attachmentInput = document.getElementById("attachments");
-    const files = attachmentInput.files;
-    if (files.length > 0) {
-      // Loop through each file and convert to Base64
-      Array.from(files).forEach(file => {
-        const fileUrl = `https://padpmc.sharepoint.com/sites/WelfareCommittee/Shared%20Documents/Food%20Cards%20Documents/${encodeURIComponent(file.name)}`;
-        convertToBase64(file).then(base64Content => {
-          formData.Attachments.push({
-            "fileName": file.name,
-            "fileContent": ensurePadding(base64Content),
-            "fileUrl": fileUrl // Include the URL here
+      const attachmentFields = [
+        {id: 'husband_eid_front', label: "Husband's Emirates ID (Front)"},
+        {id: 'husband_eid_back', label: "Husband's Emirates ID (Back)"},
+        {id: 'wife_eid_front', label: "Wife's Emirates ID (Front)"},
+        {id: 'wife_eid_back', label: "Wife's Emirates ID (Back)"},
+        {id: 'husband_salary', label: "Husband's Salary Certificate"},
+        {id: 'wife_salary', label: "Wife's Salary Certificate"}
+      ];
+
+      attachmentFields.forEach(field => {
+        const input = document.getElementById(field.id);
+        const files = input.files;
+
+        if (files.length > 0) {
+          Array.from(files).forEach(file => {
+            const fileUrl = `https://padpmc.sharepoint.com/sites/WelfareCommittee/Shared%20Documents/Food%20Cards%20Documents/${encodeURIComponent(file.name)}`;
+            convertToBase64(file).then(base64Content => {
+              formData.Attachments.push({
+                "fileName": file.name,
+                "fileContent": ensurePadding(base64Content),
+                "fileUrl": fileUrl,
+                "label": field.label  // Optionally include the label for identification
+              });
+
+              // Send data once all attachments are converted
+              if (formData.Attachments.length === getTotalFilesCount(attachmentFields)) {
+                console.log("🚀 Data being sent to Power Automate:", JSON.stringify(formData));
+                sendToPowerAutomate(formData);
+              }
+            }).catch(error => {
+              console.error("Error converting file to Base64:", error);
+            });
           });
-
-          // Send data once all attachments are converted
-          if (formData.Attachments.length === files.length) {
-            console.log("🚀 Data being sent to Power Automate:", JSON.stringify(formData));
-            sendToPowerAutomate(formData);
-          }
-        }).catch(error => {
-          console.error("Error converting file to Base64:", error);
-        });
+        }
       });
-    } else {
-      // If no attachments, send data directly
-      console.log("🚀 Data being sent to Power Automate:", JSON.stringify(formData));
-      sendToPowerAutomate(formData);
+
+// Helper function to calculate total files
+    function getTotalFilesCount(fields) {
+      return fields.reduce((count, field) => {
+        const input = document.getElementById(field.id);
+        return count + input.files.length;
+      }, 0);
     }
-});});
+  });
+});
 // Function to send data to Power Automate
 function sendToPowerAutomate(data) {
   const url = 'https://prod-15.uaecentral.logic.azure.com:443/workflows/602d33ca8ea64c7787c9c11454f70a62/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=QHvLiue9-exuonCOCG_N7vNUyzhM9eSFLmqjt89uTcs';
