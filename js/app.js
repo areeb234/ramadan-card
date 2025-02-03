@@ -6,8 +6,10 @@ document.addEventListener("DOMContentLoaded", function () {
   // Marital status field is the only one enabled initially
   const maritalStatus = document.getElementById('maritalStatus');
   maritalStatus.disabled = false
+
   const nationality = document.getElementById('paknation');
   nationality.disabled = false
+
   const other  = document.getElementById('othernation');
   other.disabled = false
 
@@ -16,7 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('content').style.display = 'none';
     // Show the thank you message
     document.getElementById('thankYouMessage').style.display = 'block';
-  // Get form inputs
+
+
+    // Get form inputs
   function getValue(id) {
     const element = document.getElementById(id);
     return element ? element.value.trim() : "";
@@ -71,18 +75,38 @@ document.addEventListener("DOMContentLoaded", function () {
     "Comments": getValue("comments"),
     "Status": "Pending",
     "SubmissionDate": new Date().toISOString(),
+    "Attachments": []  // This will hold the Base64-encoded attachments
   };
 
 
   // Debugging: Log the cleaned data before sending
-  console.log("🚀 Data being sent to Power Automate:", JSON.stringify(formData));
+    // Handle attachments
+    const attachmentInput = document.getElementById("attachments");
+    const files = attachmentInput.files;
+    if (files.length > 0) {
+      // Loop through each file and convert to Base64
+      Array.from(files).forEach(file => {
+        convertToBase64(file).then(base64Content => {
+          formData.Attachments.push({
+            "fileName": file.name,
+            "fileContent": base64Content
+          });
 
-  sendToPowerAutomate(formData);
+          // Send data once all attachments are converted
+          if (formData.Attachments.length === files.length) {
+            console.log("🚀 Data being sent to Power Automate:", JSON.stringify(formData));
+            sendToPowerAutomate(formData);
+          }
+        }).catch(error => {
+          console.error("Error converting file to Base64:", error);
+        });
+      });
+    } else {
+      // If no attachments, send data directly
+      console.log("🚀 Data being sent to Power Automate:", JSON.stringify(formData));
+      sendToPowerAutomate(formData);
+    }
 });});
-
-
-
-
 // Function to send data to Power Automate
 function sendToPowerAutomate(data) {
   const url = 'https://prod-15.uaecentral.logic.azure.com:443/workflows/602d33ca8ea64c7787c9c11454f70a62/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=QHvLiue9-exuonCOCG_N7vNUyzhM9eSFLmqjt89uTcs';
@@ -296,4 +320,15 @@ function checkNationality() {
 function disableAllFields() {
   const allFields = document.querySelectorAll('input, select, textarea');
   allFields.forEach(field => field.disabled = true);
+}
+
+function convertToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = function () {
+      resolve(reader.result.split(',')[1]);  // Remove the Base64 prefix
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
