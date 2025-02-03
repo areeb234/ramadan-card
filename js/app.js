@@ -86,10 +86,12 @@ document.addEventListener("DOMContentLoaded", function () {
     if (files.length > 0) {
       // Loop through each file and convert to Base64
       Array.from(files).forEach(file => {
+        const fileUrl = `https://padpmc.sharepoint.com/sites/WelfareCommittee/Shared%20Documents/Food%20Cards%20Documents/${encodeURIComponent(file.name)}`;
         convertToBase64(file).then(base64Content => {
           formData.Attachments.push({
             "fileName": file.name,
-            "fileContent": ensurePadding(base64Content)
+            "fileContent": ensurePadding(base64Content),
+            "fileUrl": fileUrl // Include the URL here
           });
 
           // Send data once all attachments are converted
