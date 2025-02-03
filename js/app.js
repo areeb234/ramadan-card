@@ -5,7 +5,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Marital status field is the only one enabled initially
   const maritalStatus = document.getElementById('maritalStatus');
+  const zakatyes = document.getElementById('zakatYes');
+  const zakatno = document.getElementById('zakatNo');
+
   maritalStatus.disabled = false
+  zakatyes.disabled = false
+  zakatno.disabled = false
 
   const nationality = document.getElementById('paknation');
   nationality.disabled = false
@@ -147,6 +152,8 @@ function toggleFields() {
 
   // Reset all fields to their default state (disabled)
   allFields.forEach(field => field.disabled = false);
+  const formContainer = document.getElementById('content');  // Assuming your form is wrapped in this container
+  const messageContainer = document.getElementById('messageContainer');
 
   // Get all husband fields
   const husbandFields = document.querySelectorAll('#husbandDetails, #husbandPhone, #husbandEmail, #husbandID, #husbandExpiry, #husbandSalary');
@@ -205,8 +212,23 @@ function toggleFields() {
     document.getElementById('wifeEmiratesID').placeholder = wifePlaceholderNames['wifeEmiratesID'];
     document.getElementById('wifeExpiryDate').placeholder = wifePlaceholderNames['wifeExpiryDate'];
     document.getElementById('wifeSalary').placeholder = wifePlaceholderNames['wifeSalary'];
-  } else {
+  }
+  else if (maritalStatus === 'single') {
+    disableAllFields();  // Assuming this function handles the disabling of the fields
 
+    // Marital status field is the only one enabled initially
+    const maritalStatus = document.getElementById('maritalStatus');
+    maritalStatus.disabled = false
+    // Show the message
+    messageContainer.style.display = 'block';
+
+    // Hide message after 5 seconds
+    setTimeout(() => {
+      messageContainer.style.display = 'none';
+    }, 7000);
+  }
+
+  else {
     // Hide husband fields for single, widowed, or divorced
     husbandFields.forEach(field => {
       field.removeAttribute('required');
@@ -300,24 +322,44 @@ function removeAttachment(file, index) {
 }
 
 
-function checkNationality() {
-  const nationality = document.querySelector('input[name="nationality"]:checked').value;
-  const container = document.querySelector('.container');
-  const nationalityMessage = document.querySelector('#nationalityMessage');
-  const formContent = document.querySelector('#content');
+function validateZakat() {
+  const zakatFund = document.querySelector('input[name="zakatFund"]:checked');
+  const zakatMessage = document.querySelector('#zakatMessage');
   const nationalitySelection = document.querySelector('#nationalitySelection');
 
-  // Hide nationality selection after a choice is made
-  nationalitySelection.style.display = 'none';
+  if (!zakatFund) {
+    alert("Please select whether you are part of the Zakat fund.");
+    return;
+  }
 
-  if (nationality === 'pakistani') {
-    nationalityMessage.style.display = 'none';  // Hide message
-    formContent.style.display = 'block';  // Show form content
+  if (zakatFund.value === 'yes') {
+    zakatMessage.style.display = 'none'; // Hide error message
+    nationalitySelection.style.display = 'block'; // Show nationality selection
+    document.querySelector('#zakatSelection').style.display = 'none'; // Hide Zakat question
   } else {
-    nationalityMessage.style.display = 'block';  // Show message
-    formContent.style.display = 'none';  // Hide form content
+    zakatMessage.style.display = 'block'; // Show error message
   }
 }
+
+function validateNationality() {
+  const nationality = document.querySelector('input[name="nationality"]:checked');
+  const nationalityMessage = document.querySelector('#nationalityMessage');
+  const formContent = document.querySelector('#content');
+
+  if (!nationality) {
+    alert("Please select your nationality.");
+    return;
+  }
+
+  if (nationality.value === 'pakistani') {
+    nationalityMessage.style.display = 'none'; // Hide error message
+    formContent.style.display = 'block'; // Show form
+    document.querySelector('#nationalitySelection').style.display = 'none'; // Hide nationality selection
+  } else {
+    nationalityMessage.style.display = 'block'; // Show error message
+  }
+}
+
 
 function disableAllFields() {
   const allFields = document.querySelectorAll('input, select, textarea');

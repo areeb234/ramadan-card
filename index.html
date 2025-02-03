@@ -8,22 +8,46 @@
   <script src="js/app.js"></script>
 </head>
 <body>
+
 <div class="container">
   <div class="header">
     <img src="img/padlogo2.png" alt="Smart-PAD Logo" class="logo">
     <div class="title">Ramadan Food Card</div>
+    <div id="messageContainer" style="display: none; color: red; font-size: 18px;">
+      "This form is only available for families, individuals who are widowed, or divorced. Single applicants are not eligible to apply."  </div>
+
   </div>
-  <div style="color: black" id="nationalitySelection">
-    <h3>Select Your Nationality</h3>
+  <div id="zakatSelection" style="color: black;">
+    <h3>Note, Food cards are from Zakat Funds only</h3>
     <label style="margin-right: 10px">
-      <input id="paknation" type="radio" name="nationality" value="pakistani" onclick="checkNationality()"> Pakistani
+      <input id="zakatYes" type="radio" name="zakatFund" value="yes"> Yes, I am Eligible for Zakat
     </label>
     <label>
-      <input id="othernation" type="radio" name="nationality" value="others" onclick="checkNationality()"> Others
+      <input id="zakatNo" type="radio" name="zakatFund" value="no"> No, I am not Eligible for Zakat
     </label>
+    <br><br>
+    <button class="next-button" onclick="validateZakat()">Next</button>
   </div>
 
-  <!-- Message to show if not Pakistani -->
+  <!-- Message if user is not part of Zakat fund -->
+  <div id="zakatMessage" style="color: red; display: none;">
+    Sorry, this form is only available for those who are part of the Zakat fund.
+  </div>
+
+  <!-- Nationality Selection (Hidden initially) -->
+  <div id="nationalitySelection" style="color: black; display: none;">
+    <h3>Select Your Nationality</h3>
+    <label style="margin-right: 10px">
+      <input id="paknation" type="radio" name="nationality" value="pakistani"> Pakistani
+    </label>
+    <label>
+      <input id="othernation" type="radio" name="nationality" value="others"> Others
+    </label>
+    <br><br>
+    <button class="next-button" onclick="validateNationality()">Next</button>
+  </div>
+
+  <!-- Message if user is not Pakistani -->
   <div id="nationalityMessage" style="color: red; display: none;">
     Sorry, this form is only available for Pakistani nationals.
   </div>
@@ -132,6 +156,5 @@
     <p><i>May Allah accept your good deeds during this blessed month of Ramadan. Ameen.</i></p>
   </div>
 
-</div>
 </body>
 </html>
