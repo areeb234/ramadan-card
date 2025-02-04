@@ -85,7 +85,7 @@
           <span class="details">Husband's Emirates ID</span>
           <input type="text" placeholder="Enter husband's Emirates ID"  id="husbandEmiratesID">
         </div>
-        <div class="input-box" id="husbandExpiry">
+        <div  class="input-box" id="husbandExpiry">
           <span class="details">Husband's Emirates ID Expiry</span>
           <input type="date"  id="husbandExpiryDate">
         </div>
@@ -136,35 +136,45 @@
         <div class="input-box">
           <span class="details">Attachments</span>
 
-          <div style="color: black" class="attachment-container">
-            <div>
-              <label  for="husband_eid_front">Husband's Emirates ID (Front)</label>
-              <input type="file" id="husband_eid_front" name="attachments" accept="image/*,application/pdf,.docx,.xlsx" required>
+          <div class="attachment-container">
+            <div class="husband-eid-front">
+              <label for="husband_eid_front">Husband's Emirates ID (Front)</label>
+              <input type="file" id="husband_eid_front" name="attachments" accept="image/*,application/pdf,.docx,.xlsx">
             </div>
 
-            <div>
+            <div class="husband-eid-back">
               <label for="husband_eid_back">Husband's Emirates ID (Back)</label>
-              <input type="file" id="husband_eid_back" name="attachments" accept="image/*,application/pdf,.docx,.xlsx" required>
+              <input type="file" id="husband_eid_back" name="attachments" accept="image/*,application/pdf,.docx,.xlsx">
             </div>
 
-            <div>
+            <div class="wife-eid-front">
               <label for="wife_eid_front">Wife's Emirates ID (Front)</label>
-              <input type="file" id="wife_eid_front" name="attachments" accept="image/*,application/pdf,.docx,.xlsx" required>
+              <input type="file" id="wife_eid_front" name="attachments" accept="image/*,application/pdf,.docx,.xlsx">
             </div>
 
-            <div>
+            <div class="wife-eid-back">
               <label for="wife_eid_back">Wife's Emirates ID (Back)</label>
-              <input type="file" id="wife_eid_back" name="attachments" accept="image/*,application/pdf,.docx,.xlsx" required>
+              <input type="file" id="wife_eid_back" name="attachments" accept="image/*,application/pdf,.docx,.xlsx">
             </div>
 
-            <div>
+            <div class="husband-salary">
               <label for="husband_salary">Husband's Salary Certificate</label>
-              <input type="file" id="husband_salary" name="attachments" accept="image/*,application/pdf,.docx,.xlsx" required>
+              <input type="file" id="husband_salary" name="attachments" accept="image/*,application/pdf,.docx,.xlsx">
             </div>
 
-            <div>
+            <div class="wife-salary">
               <label for="wife_salary">Wife's Salary Certificate</label>
-              <input type="file" id="wife_salary" name="attachments" accept="image/*,application/pdf,.docx,.xlsx" required>
+              <input type="file" id="wife_salary" name="attachments" accept="image/*,application/pdf,.docx,.xlsx">
+            </div>
+
+            <div id="deathCertificateField">
+              <label for="death_certificate">Death Certificate</label>
+              <input type="file" id="death_certificate" name="attachments" accept="image/*,application/pdf,.docx,.xlsx">
+            </div>
+
+            <div id="divorceCertificateField">
+              <label for="divorce_certificate">Divorce Certificate</label>
+              <input type="file" id="divorce_certificate" name="attachments" accept="image/*,application/pdf,.docx,.xlsx">
             </div>
           </div>
 

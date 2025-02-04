@@ -120,6 +120,143 @@ document.addEventListener("DOMContentLoaded", function () {
           });
         }
       });
+    if (maritalStatus === 'married') {
+      // Show both Husband and Wife fields when married
+      husbandFields.forEach(field => {
+        field.closest('.input-box').style.display = 'block';
+        field.disabled = false;
+        field.setAttribute('required', 'true'); // Make required
+      });
+      wifeFields.forEach(field => {
+        field.closest('.input-box').style.display = 'block';
+        field.disabled = false;
+        field.setAttribute('required', 'true');
+      });
+
+      // Show Husband and Wife Attachments
+      document.getElementById('husband_eid_front').closest('.input-box').style.display = 'block';
+      document.getElementById('husband_eid_back').closest('.input-box').style.display = 'block';
+      document.getElementById('wife_eid_front').closest('.input-box').style.display = 'block';
+      document.getElementById('wife_eid_back').closest('.input-box').style.display = 'block';
+      document.getElementById('husband_salary').closest('.input-box').style.display = 'block';
+      document.getElementById('wife_salary').closest('.input-box').style.display = 'block';
+    }
+    else if (maritalStatus === 'single') {
+      disableAllFields();  // Assuming this function handles the disabling of the fields
+
+      // Marital status field is the only one enabled initially
+      const maritalStatus = document.getElementById('maritalStatus');
+      maritalStatus.disabled = false;
+      messageContainer.style.display = 'block';
+
+      setTimeout(() => {
+        messageContainer.style.display = 'none';
+      }, 7000);
+
+      // Hide Attachments for Single and remove 'required' attribute
+      document.getElementById('husband_eid_front').closest('.input-box').style.display = 'none';
+      document.getElementById('husband_eid_back').closest('.input-box').style.display = 'none';
+      document.getElementById('wife_eid_front').closest('.input-box').style.display = 'none';
+      document.getElementById('wife_eid_back').closest('.input-box').style.display = 'none';
+      document.getElementById('husband_salary').closest('.input-box').style.display = 'none';
+      document.getElementById('wife_salary').closest('.input-box').style.display = 'none';
+
+      // Remove required attribute from Husband's fields
+      document.getElementById('husband_eid_front').removeAttribute('required');
+      document.getElementById('husband_eid_back').removeAttribute('required');
+      document.getElementById('husband_salary').removeAttribute('required');
+    }
+    else if (maritalStatus === 'widowed') {
+      // Show wife fields when widowed
+      wifeFields.forEach(field => {
+        field.closest('.input-box').style.display = 'block';
+        field.disabled = false;
+        field.setAttribute('required', 'true');
+      });
+
+      // Adjust labels for widowed
+      document.getElementById('wifeNameLabel').innerText = 'Your Full Name';
+      document.getElementById('wifePhoneNumberLabel').innerText = 'Your Phone Number';
+      document.getElementById('wifeEmailLabel').innerText = 'Your Email';
+      document.getElementById('wifeEmiratesIDLabel').innerText = 'Your Emirates ID Number';
+      document.getElementById('wifeExpiryDateLabel').innerText = 'Emirates ID Expiry Date';
+      document.getElementById('wifeSalaryLabel').innerText = 'Your Salary';
+
+      document.getElementById('wifeName').placeholder = 'Enter your full name';
+      document.getElementById('wifePhoneNumber').placeholder = 'Enter your phone number';
+      document.getElementById('wifeEmail').placeholder = 'Enter your email';
+      document.getElementById('wifeEmiratesID').placeholder = 'Enter your Emirates ID number';
+      document.getElementById('wifeExpiryDate').placeholder = 'Enter your Emirates ID expiry date';
+      document.getElementById('wifeSalary').placeholder = 'Enter your salary';
+
+      // Show Attachments for widowed
+      document.getElementById('wife_eid_front').closest('.input-box').style.display = 'block';
+      document.getElementById('wife_eid_back').closest('.input-box').style.display = 'block';
+      document.getElementById('wife_salary').closest('.input-box').style.display = 'block';
+
+      // Add Death Certificate field for widowed
+      const deathCertificateField = document.createElement('div');
+      deathCertificateField.innerHTML = `
+    <label for="death_certificate">Death Certificate</label>
+    <input type="file" id="death_certificate" name="attachments" accept="image/*,application/pdf,.docx,.xlsx" required>
+  `;
+      document.querySelector('.attachment-container').appendChild(deathCertificateField);
+
+      // Hide and remove required from husband's fields
+      document.getElementById('husband_eid_front').closest('.input-box').style.display = 'none';
+      document.getElementById('husband_eid_back').closest('.input-box').style.display = 'none';
+      document.getElementById('husband_salary').closest('.input-box').style.display = 'none';
+
+      document.getElementById('husband_eid_front').removeAttribute('required');
+      document.getElementById('husband_eid_back').removeAttribute('required');
+      document.getElementById('husband_salary').removeAttribute('required');
+    }
+    else if (maritalStatus === 'divorced') {
+      // Show wife fields when divorced
+      wifeFields.forEach(field => {
+        field.closest('.input-box').style.display = 'block';
+        field.disabled = false;
+        field.setAttribute('required', 'true');
+      });
+
+      // Adjust labels for divorced
+      document.getElementById('wifeNameLabel').innerText = 'Your Full Name';
+      document.getElementById('wifePhoneNumberLabel').innerText = 'Your Phone Number';
+      document.getElementById('wifeEmailLabel').innerText = 'Your Email';
+      document.getElementById('wifeEmiratesIDLabel').innerText = 'Your Emirates ID Number';
+      document.getElementById('wifeExpiryDateLabel').innerText = 'Emirates ID Expiry Date';
+      document.getElementById('wifeSalaryLabel').innerText = 'Your Salary';
+
+      document.getElementById('wifeName').placeholder = 'Enter your full name';
+      document.getElementById('wifePhoneNumber').placeholder = 'Enter your phone number';
+      document.getElementById('wifeEmail').placeholder = 'Enter your email';
+      document.getElementById('wifeEmiratesID').placeholder = 'Enter your Emirates ID number';
+      document.getElementById('wifeExpiryDate').placeholder = 'Enter your Emirates ID expiry date';
+      document.getElementById('wifeSalary').placeholder = 'Enter your salary';
+
+      // Show Attachments for divorced
+      document.getElementById('wife_eid_front').closest('.input-box').style.display = 'block';
+      document.getElementById('wife_eid_back').closest('.input-box').style.display = 'block';
+      document.getElementById('wife_salary').closest('.input-box').style.display = 'block';
+
+      // Add Divorce Certificate field for divorced
+      const divorceCertificateField = document.createElement('div');
+      divorceCertificateField.innerHTML = `
+    <label for="divorce_certificate">Divorce Certificate</label>
+    <input type="file" id="divorce_certificate" name="attachments" accept="image/*,application/pdf,.docx,.xlsx" required>
+  `;
+      document.querySelector('.attachment-container').appendChild(divorceCertificateField);
+
+      // Hide and remove required from husband's fields
+      document.getElementById('husband_eid_front').closest('.input-box').style.display = 'none';
+      document.getElementById('husband_eid_back').closest('.input-box').style.display = 'none';
+      document.getElementById('husband_salary').closest('.input-box').style.display = 'none';
+
+      document.getElementById('husband_eid_front').removeAttribute('required');
+      document.getElementById('husband_eid_back').removeAttribute('required');
+      document.getElementById('husband_salary').removeAttribute('required');
+    }
+
 
 // Helper function to calculate total files
     function getTotalFilesCount(fields) {
@@ -151,8 +288,6 @@ function sendToPowerAutomate(data) {
     });
 }
 
-
-
 function toggleFields() {
   const maritalStatus = document.getElementById('maritalStatus').value;
 
@@ -168,7 +303,6 @@ function toggleFields() {
 
   // Reset all fields to their default state (disabled)
   allFields.forEach(field => field.disabled = false);
-  const formContainer = document.getElementById('content');  // Assuming your form is wrapped in this container
   const messageContainer = document.getElementById('messageContainer');
 
   // Get all husband fields
@@ -180,87 +314,66 @@ function toggleFields() {
   homeAddressField.disabled = false;
   commentsField.disabled = false;
 
-  // Reset the wife's label and placeholder names to default
-  const wifeLabelNames = {
-    'wifeName': 'Wife\'s Full Name',
-    'wifePhoneNumber': 'Wife\'s Phone Number',
-    'wifeEmail': 'Wife\'s Email',
-    'wifeEmiratesID': 'Wife\'s Emirates ID',
-    'wifeExpiryDate': 'Wife\'s Emirates ID Expiry',
-    'wifeSalary': 'Wife\'s Salary',
-  };
-
-  const wifePlaceholderNames = {
-    'wifeName': 'Enter wife\'s full name',
-    'wifePhoneNumber': 'Enter wife\'s phone number',
-    'wifeEmail': 'Enter wife\'s email',
-    'wifeEmiratesID': 'Enter wife\'s Emirates ID number',
-    'wifeExpiryDate': 'Enter wife\'s Emirates ID expiry date',
-    'wifeSalary': 'Enter wife\'s salary',
-  };
-
-  // Show/hide fields based on marital status
+  // Reset the wife's label and placeholder names to defaul
   if (maritalStatus === 'married') {
-    // Show both Husband and Wife fields when married
     husbandFields.forEach(field => {
+      field.style.display = 'block'; // Show entire container
+      field.setAttribute('required', 'true'); // Ensure fields are required
+    });
+
+    // Reset Wife Labels and Placeholders to Default
+    document.getElementById('wifeNameLabel').innerText = "Wife's Full Name";
+    document.getElementById('wifePhoneNumberLabel').innerText = "Wife's Phone Number";
+    document.getElementById('wifeEmailLabel').innerText = "Wife's Email";
+    document.getElementById('wifeEmiratesIDLabel').innerText = "Wife's Emirates ID";
+    document.getElementById('wifeExpiryDateLabel').innerText = "Wife's Emirates ID Expiry";
+    document.getElementById('wifeSalaryLabel').innerText = "Wife's Salary";
+
+    document.getElementById('wifeName').placeholder = "Enter wife's full name";
+    document.getElementById('wifePhoneNumber').placeholder = "Enter wife's phone number";
+    document.getElementById('wifeEmail').placeholder = "Enter wife's email";
+    document.getElementById('wifeEmiratesID').placeholder = "Enter wife's Emirates ID number";
+    document.getElementById('wifeExpiryDate').placeholder = "Enter wife's Emirates ID expiry date";
+    document.getElementById('wifeSalary').placeholder = "Enter wife's salary";
+
+    // Ensure all wife fields are visible and required
+    wifeFields.forEach(field => {
       field.closest('.input-box').style.display = 'block';
       field.disabled = false;
-      field.setAttribute('required', 'true'); // Make required
+      field.setAttribute('required', 'true'); // Ensure wife fields are required
     });
+
+    // Hide Death & Divorce Certificate fields and remove 'required'
+    document.getElementById('death_certificate').closest('div').style.display = 'none';
+    document.getElementById('divorce_certificate').closest('div').style.display = 'none';
+    document.getElementById('death_certificate').removeAttribute('required');
+    document.getElementById('divorce_certificate').removeAttribute('required');
+
+    // Ensure correct attachments are displayed for married
+    ['husband_eid_front', 'husband_eid_back', 'husband_salary'].forEach(id => {
+      const element = document.getElementById(id);
+      element.closest('div').classList.remove('hidden');
+      element.setAttribute('required', 'true'); // Ensure attachments are required
+    });
+  }
+
+
+
+  else if (maritalStatus === 'widowed') {
+    husbandFields.forEach(field => {
+      field.style.display = 'none'; // Hide entire container
+    });
+    // Show wife fields when divorced
     wifeFields.forEach(field => {
       field.closest('.input-box').style.display = 'block';
       field.disabled = false;
       field.setAttribute('required', 'true');
     });
-
-    // Change wife's labels and placeholders to default
-    document.getElementById('wifeNameLabel').innerText = wifeLabelNames['wifeName'];
-    document.getElementById('wifePhoneNumberLabel').innerText = wifeLabelNames['wifePhoneNumber'];
-    document.getElementById('wifeEmailLabel').innerText = wifeLabelNames['wifeEmail'];
-    document.getElementById('wifeEmiratesIDLabel').innerText = wifeLabelNames['wifeEmiratesID'];
-    document.getElementById('wifeExpiryDateLabel').innerText = wifeLabelNames['wifeExpiryDate'];
-    document.getElementById('wifeSalaryLabel').innerText = wifeLabelNames['wifeSalary'];
-
-    // Reset placeholders to default
-    document.getElementById('wifeName').placeholder = wifePlaceholderNames['wifeName'];
-    document.getElementById('wifePhoneNumber').placeholder = wifePlaceholderNames['wifePhoneNumber'];
-    document.getElementById('wifeEmail').placeholder = wifePlaceholderNames['wifeEmail'];
-    document.getElementById('wifeEmiratesID').placeholder = wifePlaceholderNames['wifeEmiratesID'];
-    document.getElementById('wifeExpiryDate').placeholder = wifePlaceholderNames['wifeExpiryDate'];
-    document.getElementById('wifeSalary').placeholder = wifePlaceholderNames['wifeSalary'];
-  }
-  else if (maritalStatus === 'single') {
-    disableAllFields();  // Assuming this function handles the disabling of the fields
-
-    // Marital status field is the only one enabled initially
-    const maritalStatus = document.getElementById('maritalStatus');
-    maritalStatus.disabled = false
-    // Show the message
-    messageContainer.style.display = 'block';
-
-    // Hide message after 5 seconds
-    setTimeout(() => {
-      messageContainer.style.display = 'none';
-    }, 7000);
-  }
-
-  else {
-    // Hide husband fields for single, widowed, or divorced
-    husbandFields.forEach(field => {
-      field.removeAttribute('required');
-      field.closest('.input-box').style.display = 'none';
-      field.disabled = true;
+    document.querySelectorAll('.husband-attachment').forEach(div => {
+      div.style.display = 'none';
     });
 
-    // Ensure wife fields are visible and enabled
-    wifeFields.forEach(field => {
-      field.closest('.input-box').style.display = 'block';
-      field.disabled = false;
-      field.setAttribute('required', 'true');
-    });
-
-
-    // Change wife fields' labels and placeholders to "Your"
+    // Adjust labels for divorced
     document.getElementById('wifeNameLabel').innerText = 'Your Full Name';
     document.getElementById('wifePhoneNumberLabel').innerText = 'Your Phone Number';
     document.getElementById('wifeEmailLabel').innerText = 'Your Email';
@@ -274,9 +387,90 @@ function toggleFields() {
     document.getElementById('wifeEmiratesID').placeholder = 'Enter your Emirates ID number';
     document.getElementById('wifeExpiryDate').placeholder = 'Enter your Emirates ID expiry date';
     document.getElementById('wifeSalary').placeholder = 'Enter your salary';
+
+    // Show Attachments for divorced
+    // Hide husband's attachments
+    document.getElementById('husband_eid_front').closest('div').classList.add('hidden');
+    document.getElementById('husband_eid_back').closest('div').classList.add('hidden');
+    document.getElementById('husband_salary').closest('div').classList.add('hidden');
+
+// Show wife's attachments
+    document.getElementById('wife_eid_front').closest('div').classList.remove('hidden');
+    document.getElementById('wife_eid_back').closest('div').classList.remove('hidden');
+    document.getElementById('wife_salary').closest('div').classList.remove('hidden');
+
+// Show Divorce Certificate field
+    document.getElementById('divorce_certificate').closest('div').classList.add('hidden');
+
+// Hide Death Certificate field (if applicable)
+    document.getElementById('death_certificate').closest('div').classList.remove('hidden');
+
+
   }
 
+  else if (maritalStatus === 'divorced') {
+    husbandFields.forEach(field => {
+      field.style.display = 'none'; // Hide entire container
+    });
+    // Show wife fields when divorced
+    wifeFields.forEach(field => {
+      field.closest('.input-box').style.display = 'block';
+      field.disabled = false;
+      field.setAttribute('required', 'true');
+    });
+    document.querySelectorAll('.husband-attachment').forEach(div => {
+      div.style.display = 'none';
+    });
+
+    // Adjust labels for divorced
+    document.getElementById('wifeNameLabel').innerText = 'Your Full Name';
+    document.getElementById('wifePhoneNumberLabel').innerText = 'Your Phone Number';
+    document.getElementById('wifeEmailLabel').innerText = 'Your Email';
+    document.getElementById('wifeEmiratesIDLabel').innerText = 'Your Emirates ID Number';
+    document.getElementById('wifeExpiryDateLabel').innerText = 'Emirates ID Expiry Date';
+    document.getElementById('wifeSalaryLabel').innerText = 'Your Salary';
+
+    document.getElementById('wifeName').placeholder = 'Enter your full name';
+    document.getElementById('wifePhoneNumber').placeholder = 'Enter your phone number';
+    document.getElementById('wifeEmail').placeholder = 'Enter your email';
+    document.getElementById('wifeEmiratesID').placeholder = 'Enter your Emirates ID number';
+    document.getElementById('wifeExpiryDate').placeholder = 'Enter your Emirates ID expiry date';
+    document.getElementById('wifeSalary').placeholder = 'Enter your salary';
+
+    // Show Attachments for divorced
+    // Hide husband's attachments
+    document.getElementById('husband_eid_front').closest('div').classList.add('hidden');
+    document.getElementById('husband_eid_back').closest('div').classList.add('hidden');
+    document.getElementById('husband_salary').closest('div').classList.add('hidden');
+
+// Show wife's attachments
+    document.getElementById('wife_eid_front').closest('div').classList.remove('hidden');
+    document.getElementById('wife_eid_back').closest('div').classList.remove('hidden');
+    document.getElementById('wife_salary').closest('div').classList.remove('hidden');
+
+// Show Divorce Certificate field
+    document.getElementById('divorce_certificate').closest('div').classList.remove('hidden');
+
+// Hide Death Certificate field (if applicable)
+    document.getElementById('death_certificate').closest('div').classList.add('hidden');
+
+
+  }
+
+  else if (maritalStatus === 'single') {
+    disableAllFields();  // Assuming this function handles the disabling of the fields
+
+    // Marital status field is the only one enabled initially
+    const maritalStatus = document.getElementById('maritalStatus');
+    maritalStatus.disabled = false;
+    messageContainer.style.display = 'block';
+
+    setTimeout(() => {
+      messageContainer.style.display = 'none';
+    }, 7000);
+  }
 }
+
 function handleAttachments() {
   const attachmentInput = document.getElementById("attachments");
   const attachmentError = document.getElementById("attachmentError");
