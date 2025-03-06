@@ -18,7 +18,7 @@
 
   </div>
   <div id="zakatSelection" style="color: black;">
-    <h3>Note, Food cards are from Zakat Funds only</h3>
+    <h3>Note, Food cards are from Zakat Funds only <span style="color: red;">*</span></h3>
     <label style="margin-right: 10px">
       <input id="zakatYes" type="radio" name="zakatFund" value="yes"> Yes, I am Eligible for Zakat
     </label>
@@ -31,25 +31,20 @@
 
   <!-- Message if user is not part of Zakat fund -->
   <div id="zakatMessage" style="color: red; display: none;">
-    Sorry, this form is only available for those who are part of the Zakat fund.
+    Sorry, this facility is available for those who are eligible for zakat.
   </div>
 
   <!-- Nationality Selection (Hidden initially) -->
-  <div id="nationalitySelection" style="color: black; display: none;">
-    <h3>Select Your Nationality</h3>
-    <label style="margin-right: 10px">
-      <input id="paknation" type="radio" name="nationality" value="pakistani"> Pakistani
-    </label>
-    <label>
-      <input id="othernation" type="radio" name="nationality" value="others"> Others
-    </label>
+  <div class="nationality" id="nationalitySelection" style="color: black; display: none;">
+    <h3>Select Your Nationality <span style="color: red;">*</span></h3>
+    <select id="countryDropdown" style="margin-left: 15px;" >
+      <option value="">Select Nationality</option>
+      <option value="indian">Indian</option>
+      <option value="british">British</option>
+      <option value="american">American</option>
+    </select>
     <br><br>
     <button class="next-button" onclick="validateNationality()">Next</button>
-  </div>
-
-  <!-- Message if user is not Pakistani -->
-  <div id="nationalityMessage" style="color: red; display: none;">
-    Sorry, this form is only available for Pakistani nationals.
   </div>
 
 
@@ -57,11 +52,12 @@
     <form action="#" id="dataForm">
       <div class="user-details">
         <div class="input-box">
-          <span class="details">Marital Status</span>
-
+          <span class="details">Marital Status<span style="color: red;">*</span></span>
           <select name="maritalStatus"  required onchange="toggleFields()" id="maritalStatus">
             <option value="" >Select marital status</option>
+<!--
             <option value="single">Single</option>
+-->
             <option value="married">Married</option>
             <option value="widowed">Widowed</option>
             <option value="divorced">Divorced</option>
@@ -70,61 +66,76 @@
 
         <!-- Husband's Details -->
         <div class="input-box" id="husbandDetails">
-          <span class="details">Husband's Full Name</span>
+          <span class="details">Husband's Full Name <span style="color: red;">*</span></span>
           <input type="text" placeholder="Enter husband's name"  id="husbandName">
         </div>
         <div class="input-box" id="husbandPhone">
-          <span class="details">Husband's Phone Number</span>
-          <input type="text" placeholder="Enter husband's number"  id="husbandPhoneNumber">
+          <span class="details">Husband's Phone Number <span style="color: red;">*</span></span>
+          <input maxlength="10" type="text" placeholder="05XXXXXXX"  id="husbandPhoneNumber">
         </div>
         <div class="input-box" id="husbandEmail">
-          <span class="details">Husband's Email</span>
-          <input type="text" placeholder="Enter husband's email"  id="husbandEmail1">
+          <span class="details">Husband's Email <span style="color: red;">*</span></span>
+          <input type="text" placeholder="Enter husband's email"  id="husbandEmail1" >
         </div>
         <div class="input-box" id="husbandID">
-          <span class="details">Husband's Emirates ID</span>
-          <input type="text" placeholder="Enter husband's Emirates ID"  id="husbandEmiratesID">
+          <span class="details">Husband's Emirates ID No. <span style="color: red;">*</span></span>
+          <input maxlength="18" type="text" placeholder="Enter husband's Emirates ID" id="husbandEmiratesID" oninput="formatEmiratesID('husbandEmiratesID')">
         </div>
         <div  class="input-box" id="husbandExpiry">
-          <span class="details">Husband's Emirates ID Expiry</span>
+          <span class="details">Husband's Emirates ID Expiry Date <span style="color: red;">*</span></span>
           <input type="date"  id="husbandExpiryDate">
         </div>
         <div class="input-box" id="husbandSalary">
-          <span class="details">Husband's Salary</span>
-          <input type="text" placeholder="Enter husband's salary"  id="husbandSalaryValue">
+          <span class="details">Husband's Salary <span style="color: red;">*</span></span>
+          <input type="number" placeholder="Enter husband's salary"id="husbandSalaryValue" onkeydown="return isNumberKey(event)">
         </div>
 
         <!-- Wife's Details -->
         <div class="input-box">
-          <span class="details" id="wifeNameLabel">Wife's Full Name</span>
+          <span class="details" id="wifeNameLabel">Wife's Full Name <span style="color: red;">*</span></span>
           <input type="text" id="wifeName" placeholder="Enter wife's name" required>
         </div>
         <div class="input-box">
-          <span class="details" id="wifePhoneNumberLabel">Wife's Phone Number</span>
-          <input type="text" id="wifePhoneNumber" placeholder="Enter wife's number" required>
+          <span class="details" id="wifePhoneNumberLabel">Wife's Phone Number <span style="color: red;">*</span></span>
+          <input  maxlength="10" type="text" id="wifePhoneNumber" placeholder="05XXXXXXX" required>
         </div>
         <div class="input-box">
-          <span class="details" id="wifeEmailLabel">Wife's Email</span>
+          <span class="details" id="wifeEmailLabel">Wife's Email <span style="color: red;">*</span></span>
           <input type="text" id="wifeEmail" placeholder="Enter wife's email" required>
         </div>
         <div class="input-box">
-          <span class="details" id="wifeEmiratesIDLabel">Wife's Emirates ID</span>
-          <input type="text" id="wifeEmiratesID" placeholder="Enter wife's Emirates ID" required>
+          <span class="details" id="wifeEmiratesIDLabel">Wife's Emirates ID No. <span style="color: red;">*</span></span>
+          <input maxlength="18" type="text" id="wifeEmiratesID" placeholder="Enter wife's Emirates ID" oninput="formatEmiratesID('wifeEmiratesID')" required>
         </div>
         <div class="input-box">
-          <span class="details" id="wifeExpiryDateLabel">Wife's Emirates ID Expiry</span>
+          <span class="details" id="wifeExpiryDateLabel">Wife's Emirates ID Expiry Date <span style="color: red;">*</span></span>
           <input type="date" id="wifeExpiryDate" required>
         </div>
         <div class="input-box">
           <span class="details" id="wifeSalaryLabel">Wife's Salary</span>
-          <input type="text" id="wifeSalary" placeholder="Enter wife's salary" required>
+          <input type="number" placeholder="Enter wife's salary" id="wifeSalary" min="0" onkeydown="return isNumberKey(event)">
         </div>
 
         <!-- Additional Information -->
         <div class="input-box">
-          <span class="details">Home Address</span>
+          <span class="details">Home Address <span style="color: red;">*</span></span>
           <input type="text" placeholder="Enter home address" id="homeAddress">
         </div>
+
+        <div class="input-box">
+          <span class="details">Emirates <span style="color: red;">*</span></span>
+          <select name="Emirates"  id="emirates">
+            <option value="">Select Emirate</option>
+            <option value="Abu Dhabi">Abu Dhabi</option>
+            <option value="Dubai">Dubai</option>
+            <option value="Sharjah">Sharjah</option>
+            <option value="Ajman">Ajman</option>
+            <option value="Umm Al-Quwain">Umm Al-Quwain</option>
+            <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+            <option value="Fujairah">Fujairah</option>
+          </select>
+        </div>
+
         <!-- Additional Information -->
         <div class="input-box" style="width: 100%;">
           <span class="details">Comments</span>
@@ -138,8 +149,8 @@
 
           <div class="attachment-container">
             <div class="husband-eid-front">
-              <label for="husband_eid_front">Husband's Emirates ID (Front)</label>
-              <input type="file" id="husband_eid_front" name="attachments" accept="image/*,application/pdf,.docx,.xlsx">
+              <label for="husband_eid_front">Husband's Emirates ID (Front) </label>
+              <input  type="file" id="husband_eid_front" name="attachments" accept="image/*,application/pdf,.docx,.xlsx">
             </div>
 
             <div class="husband-eid-back">
@@ -148,17 +159,17 @@
             </div>
 
             <div class="wife-eid-front">
-              <label for="wife_eid_front">Wife's Emirates ID (Front)</label>
+              <label for="wife_eid_front">Wife's Emirates ID (Front) <span style="color: red;">*</span></label>
               <input type="file" id="wife_eid_front" name="attachments" accept="image/*,application/pdf,.docx,.xlsx">
             </div>
 
             <div class="wife-eid-back">
-              <label for="wife_eid_back">Wife's Emirates ID (Back)</label>
+              <label for="wife_eid_back">Wife's Emirates ID (Back) <span style="color: red;">*</span></label>
               <input type="file" id="wife_eid_back" name="attachments" accept="image/*,application/pdf,.docx,.xlsx">
             </div>
 
             <div class="husband-salary">
-              <label for="husband_salary">Husband's Salary Certificate</label>
+              <label for="husband_salary">Husband's Salary Certificate </label>
               <input type="file" id="husband_salary" name="attachments" accept="image/*,application/pdf,.docx,.xlsx">
             </div>
 

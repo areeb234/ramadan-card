@@ -1,31 +1,75 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-
   disableAllFields();  // Assuming this function handles the disabling of the fields
 
   // Marital status field is the only one enabled initially
   const maritalStatus = document.getElementById('maritalStatus');
   const zakatyes = document.getElementById('zakatYes');
   const zakatno = document.getElementById('zakatNo');
-
+  const country = document.getElementById('countryDropdown');
+  country.disabled = false
   maritalStatus.disabled = false
   zakatyes.disabled = false
   zakatno.disabled = false
 
-  const nationality = document.getElementById('paknation');
-  nationality.disabled = false
-
-  const other  = document.getElementById('othernation');
-  other.disabled = false
-
   document.getElementById('dataForm').addEventListener('submit', function (e) {
     e.preventDefault();
-    document.getElementById('content').style.display = 'none';
-    // Show the thank you message
-    document.getElementById('thankYouMessage').style.display = 'block';
+    const maritalStatusval = document.getElementById("maritalStatus").value;
+
+    let isValid = true;
+    let errorMessage = "";
+
+    function validateExpiryDate(dateInput) {
+      let expiryDate = new Date(dateInput);
+
+      // Check if the date is invalid
+      if (isNaN(expiryDate)) {
+        return false; // Invalid date
+      }
+
+      // Check if the date has a complete day, month, and year
+      if (expiryDate.getDate() === 1 && expiryDate.getMonth() === 0 && expiryDate.getFullYear() === 1970) {
+        return false; // This indicates an incomplete or invalid date
+      }
+
+      return true; // Valid date with complete day, month, and year
+    }
 
 
-    // Get form inputs
+    let husbandExpiryDate = document.getElementById("husbandExpiryDate").value.trim();
+    if (husbandExpiryDate && !validateExpiryDate(husbandExpiryDate) && maritalStatusval.toLowerCase() === "married"){
+      isValid = false;
+    }
+
+    // Validate wife's Emirates ID expiry date
+    let wifeExpiryDate = document.getElementById("wifeExpiryDate").value.trim();
+    if (wifeExpiryDate && !validateExpiryDate(wifeExpiryDate)) {
+      isValid = false;
+    }
+
+    const wifeEmail = document.getElementById('wifeEmail').value;
+    const husbandEmail = document.getElementById('husbandEmail1').value;
+
+    // Regular expression for validating email
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+    // Validate Wife's Email
+    if (!emailPattern.test(wifeEmail)) {
+      alert('Please enter a valid email address for the wife.');
+      isValid = false
+    }
+
+    // Validate Husband's Email
+    if (!emailPattern.test(husbandEmail) && maritalStatusval.toLowerCase() === "married") {
+      alert('Please enter a valid email address for the husband.');
+      isValid = false
+    }
+
+    // If validation fails, prevent form submission
+    if (!isValid) {
+      e.preventDefault();
+      return
+    }
     function getValue(id) {
       const element = document.getElementById(id);
       return element ? element.value.trim() : "";
@@ -36,30 +80,15 @@ document.addEventListener("DOMContentLoaded", function () {
       return element ? element.value : "";
     }
 
-    const maritalStatus = getValue("maritalStatus");
-    const requiredFields = [];
+    function getNationalityValue() {
+      const dropdown = document.getElementById("countryDropdown");
+      const dropdownValue = dropdown.value;
 
-    if (maritalStatus === 'married') {
-      requiredFields.push("husbandName", "husbandPhoneNumber", "husbandEmail1", "husbandEmiratesID", "husbandExpiryDate", "husbandSalaryValue");
-    }
-
-    requiredFields.push("wifeName", "wifePhoneNumber", "wifeEmail", "wifeEmiratesID", "wifeExpiryDate", "wifeSalary");
-
-    // Check if required fields are filled
-    let isValid = true;
-    requiredFields.forEach(id => {
-      const field = document.getElementById(id);
-      if (field && !field.value.trim()) {
-        isValid = false;
-        field.classList.add("error"); // Add a red border or highlight (optional)
-      } else {
-        field.classList.remove("error");
+      // If the dropdown has a selected value, clear the radio selection
+      if (dropdownValue) {
+        return dropdownValue;
       }
-    });
 
-    if (!isValid) {
-      alert("Please fill in all required fields before submitting.");
-      return;
     }
 
     const formData = {
@@ -80,182 +109,54 @@ document.addEventListener("DOMContentLoaded", function () {
       "HomeAddress": getValue("homeAddress"),
       "Comments": getValue("comments"),
       "Status": "Pending",
-      "SubmissionDate": new Date().toISOString(),
+      "SubmissionDate": new Date().toLocaleString('en-GB', { timeZone: 'Asia/Dubai' }),
+      "Emirates": getValue("emirates"),
+      "Nationality": getNationalityValue(),
       "Attachments": []  // This will hold the Base64-encoded attachments
     };
+    const attachmentFields = [
+      { id: 'husband_eid_front', label: "Husband's Emirates ID (Front)" },
+      { id: 'husband_eid_back', label: "Husband's Emirates ID (Back)" },
+      { id: 'wife_eid_front', label: "Wife's Emirates ID (Front)" },
+      { id: 'wife_eid_back', label: "Wife's Emirates ID (Back)" },
+      { id: 'husband_salary', label: "Husband's Salary Certificate" },
+      { id: 'wife_salary', label: "Wife's Salary Certificate" },
+      { id: 'divorce_certificate', label: "Divorce Certificate" },
+      { id: 'death_certificate', label: "Death Certificate" }
+    ];
 
+    attachmentFields.forEach(field => {
+      const input = document.getElementById(field.id);
 
-      const attachmentFields = [
-        {id: 'husband_eid_front', label: "Husband's Emirates ID (Front)"},
-        {id: 'husband_eid_back', label: "Husband's Emirates ID (Back)"},
-        {id: 'wife_eid_front', label: "Wife's Emirates ID (Front)"},
-        {id: 'wife_eid_back', label: "Wife's Emirates ID (Back)"},
-        {id: 'husband_salary', label: "Husband's Salary Certificate"},
-        {id: 'wife_salary', label: "Wife's Salary Certificate"}
-      ];
+      // Ignore if the input is empty or does not exist
+      if (!input || input.files.length === 0) return;
 
-      attachmentFields.forEach(field => {
-        const input = document.getElementById(field.id);
-        const files = input.files;
+      Array.from(input.files).forEach(file => {
+        // Find the last dot (.) to correctly extract the file extension
+        const lastDotIndex = file.name.lastIndexOf(".");
+        const fileExtension = lastDotIndex !== -1 ? file.name.substring(lastDotIndex) : ""; // Keep dot and extension
+        const customFileName = `${field.id}${fileExtension}`; // Use input field ID as file name
 
-        if (files.length > 0) {
-          Array.from(files).forEach(file => {
-            const fileUrl = `https://padpmc.sharepoint.com/sites/WelfareCommittee/Shared%20Documents/Food%20Cards%20Documents/${encodeURIComponent(file.name)}`;
-            convertToBase64(file).then(base64Content => {
-              formData.Attachments.push({
-                "fileName": file.name,
-                "fileContent": ensurePadding(base64Content),
-                "fileUrl": fileUrl,
-                "label": field.label  // Optionally include the label for identification
-              });
+        const fileUrl = `https://padpmc.sharepoint.com/sites/WelfareCommittee/Shared%20Documents/Food%20Cards%20Documents/${encodeURIComponent(customFileName)}`;
 
-              // Send data once all attachments are converted
-              if (formData.Attachments.length === getTotalFilesCount(attachmentFields)) {
-                console.log("🚀 Data being sent to Power Automate:", JSON.stringify(formData));
-                sendToPowerAutomate(formData);
-              }
-            }).catch(error => {
-              console.error("Error converting file to Base64:", error);
-            });
+        convertToBase64(file).then(base64Content => {
+          formData.Attachments.push({
+            "fileName": customFileName, // Use custom filename with proper extension
+            "fileContent": ensurePadding(base64Content),
+            "fileUrl": fileUrl,
+            "label": field.label // Optionally include label for reference
           });
-        }
+
+          // Send data once all attachments are converted
+          if (formData.Attachments.length === getTotalFilesCount(attachmentFields)) {
+            console.log("🚀 Data being sent to Power Automate:", JSON.stringify(formData));
+            sendToPowerAutomate(formData);
+          }
+        }).catch(error => {
+          console.error("Error converting file to Base64:", error);
+        });
       });
-    if (maritalStatus === 'married') {
-      // Show both Husband and Wife fields when married
-      husbandFields.forEach(field => {
-        field.closest('.input-box').style.display = 'block';
-        field.disabled = false;
-        field.setAttribute('required', 'true'); // Make required
-      });
-      wifeFields.forEach(field => {
-        field.closest('.input-box').style.display = 'block';
-        field.disabled = false;
-        field.setAttribute('required', 'true');
-      });
-
-      // Show Husband and Wife Attachments
-      document.getElementById('husband_eid_front').closest('.input-box').style.display = 'block';
-      document.getElementById('husband_eid_back').closest('.input-box').style.display = 'block';
-      document.getElementById('wife_eid_front').closest('.input-box').style.display = 'block';
-      document.getElementById('wife_eid_back').closest('.input-box').style.display = 'block';
-      document.getElementById('husband_salary').closest('.input-box').style.display = 'block';
-      document.getElementById('wife_salary').closest('.input-box').style.display = 'block';
-    }
-    else if (maritalStatus === 'single') {
-      disableAllFields();  // Assuming this function handles the disabling of the fields
-
-      // Marital status field is the only one enabled initially
-      const maritalStatus = document.getElementById('maritalStatus');
-      maritalStatus.disabled = false;
-      messageContainer.style.display = 'block';
-
-      setTimeout(() => {
-        messageContainer.style.display = 'none';
-      }, 7000);
-
-      // Hide Attachments for Single and remove 'required' attribute
-      document.getElementById('husband_eid_front').closest('.input-box').style.display = 'none';
-      document.getElementById('husband_eid_back').closest('.input-box').style.display = 'none';
-      document.getElementById('wife_eid_front').closest('.input-box').style.display = 'none';
-      document.getElementById('wife_eid_back').closest('.input-box').style.display = 'none';
-      document.getElementById('husband_salary').closest('.input-box').style.display = 'none';
-      document.getElementById('wife_salary').closest('.input-box').style.display = 'none';
-
-      // Remove required attribute from Husband's fields
-      document.getElementById('husband_eid_front').removeAttribute('required');
-      document.getElementById('husband_eid_back').removeAttribute('required');
-      document.getElementById('husband_salary').removeAttribute('required');
-    }
-    else if (maritalStatus === 'widowed') {
-      // Show wife fields when widowed
-      wifeFields.forEach(field => {
-        field.closest('.input-box').style.display = 'block';
-        field.disabled = false;
-        field.setAttribute('required', 'true');
-      });
-
-      // Adjust labels for widowed
-      document.getElementById('wifeNameLabel').innerText = 'Your Full Name';
-      document.getElementById('wifePhoneNumberLabel').innerText = 'Your Phone Number';
-      document.getElementById('wifeEmailLabel').innerText = 'Your Email';
-      document.getElementById('wifeEmiratesIDLabel').innerText = 'Your Emirates ID Number';
-      document.getElementById('wifeExpiryDateLabel').innerText = 'Emirates ID Expiry Date';
-      document.getElementById('wifeSalaryLabel').innerText = 'Your Salary';
-
-      document.getElementById('wifeName').placeholder = 'Enter your full name';
-      document.getElementById('wifePhoneNumber').placeholder = 'Enter your phone number';
-      document.getElementById('wifeEmail').placeholder = 'Enter your email';
-      document.getElementById('wifeEmiratesID').placeholder = 'Enter your Emirates ID number';
-      document.getElementById('wifeExpiryDate').placeholder = 'Enter your Emirates ID expiry date';
-      document.getElementById('wifeSalary').placeholder = 'Enter your salary';
-
-      // Show Attachments for widowed
-      document.getElementById('wife_eid_front').closest('.input-box').style.display = 'block';
-      document.getElementById('wife_eid_back').closest('.input-box').style.display = 'block';
-      document.getElementById('wife_salary').closest('.input-box').style.display = 'block';
-
-      // Add Death Certificate field for widowed
-      const deathCertificateField = document.createElement('div');
-      deathCertificateField.innerHTML = `
-    <label for="death_certificate">Death Certificate</label>
-    <input type="file" id="death_certificate" name="attachments" accept="image/*,application/pdf,.docx,.xlsx" required>
-  `;
-      document.querySelector('.attachment-container').appendChild(deathCertificateField);
-
-      // Hide and remove required from husband's fields
-      document.getElementById('husband_eid_front').closest('.input-box').style.display = 'none';
-      document.getElementById('husband_eid_back').closest('.input-box').style.display = 'none';
-      document.getElementById('husband_salary').closest('.input-box').style.display = 'none';
-
-      document.getElementById('husband_eid_front').removeAttribute('required');
-      document.getElementById('husband_eid_back').removeAttribute('required');
-      document.getElementById('husband_salary').removeAttribute('required');
-    }
-    else if (maritalStatus === 'divorced') {
-      // Show wife fields when divorced
-      wifeFields.forEach(field => {
-        field.closest('.input-box').style.display = 'block';
-        field.disabled = false;
-        field.setAttribute('required', 'true');
-      });
-
-      // Adjust labels for divorced
-      document.getElementById('wifeNameLabel').innerText = 'Your Full Name';
-      document.getElementById('wifePhoneNumberLabel').innerText = 'Your Phone Number';
-      document.getElementById('wifeEmailLabel').innerText = 'Your Email';
-      document.getElementById('wifeEmiratesIDLabel').innerText = 'Your Emirates ID Number';
-      document.getElementById('wifeExpiryDateLabel').innerText = 'Emirates ID Expiry Date';
-      document.getElementById('wifeSalaryLabel').innerText = 'Your Salary';
-
-      document.getElementById('wifeName').placeholder = 'Enter your full name';
-      document.getElementById('wifePhoneNumber').placeholder = 'Enter your phone number';
-      document.getElementById('wifeEmail').placeholder = 'Enter your email';
-      document.getElementById('wifeEmiratesID').placeholder = 'Enter your Emirates ID number';
-      document.getElementById('wifeExpiryDate').placeholder = 'Enter your Emirates ID expiry date';
-      document.getElementById('wifeSalary').placeholder = 'Enter your salary';
-
-      // Show Attachments for divorced
-      document.getElementById('wife_eid_front').closest('.input-box').style.display = 'block';
-      document.getElementById('wife_eid_back').closest('.input-box').style.display = 'block';
-      document.getElementById('wife_salary').closest('.input-box').style.display = 'block';
-
-      // Add Divorce Certificate field for divorced
-      const divorceCertificateField = document.createElement('div');
-      divorceCertificateField.innerHTML = `
-    <label for="divorce_certificate">Divorce Certificate</label>
-    <input type="file" id="divorce_certificate" name="attachments" accept="image/*,application/pdf,.docx,.xlsx" required>
-  `;
-      document.querySelector('.attachment-container').appendChild(divorceCertificateField);
-
-      // Hide and remove required from husband's fields
-      document.getElementById('husband_eid_front').closest('.input-box').style.display = 'none';
-      document.getElementById('husband_eid_back').closest('.input-box').style.display = 'none';
-      document.getElementById('husband_salary').closest('.input-box').style.display = 'none';
-
-      document.getElementById('husband_eid_front').removeAttribute('required');
-      document.getElementById('husband_eid_back').removeAttribute('required');
-      document.getElementById('husband_salary').removeAttribute('required');
-    }
+    });
 
 
 // Helper function to calculate total files
@@ -265,9 +166,53 @@ document.addEventListener("DOMContentLoaded", function () {
         return count + input.files.length;
       }, 0);
     }
+
+    document.getElementById('content').style.display = 'none';
+    // Show the thank you message
+    document.getElementById('thankYouMessage').style.display = 'block';
+
+
   });
+
+  function setupPhoneNumberInput(inputId) {
+    const input = document.getElementById(inputId);
+
+    // Set default value to '05' when the page loads
+    input.value = "05";
+
+    // Ensure cursor starts at the end when clicked
+    input.addEventListener("focus", function () {
+      if (!input.value.startsWith("05")) {
+        input.value = "05";
+      }
+      setTimeout(() => input.setSelectionRange(2, 2), 0);
+    });
+
+    // Restrict input to only numbers and prevent deletion of '05'
+    input.addEventListener("input", function () {
+      if (!input.value.startsWith("05")) {
+        input.value = "05"; // Reset if user tries to remove '05'
+      }
+      input.value = input.value.replace(/[^0-9]/g, ""); // Allow only numbers
+      if (input.value.length > 10) {
+        input.value = input.value.slice(0, 10); // Limit to 10 characters
+      }
+    });
+
+    // Prevent backspace from deleting '05'
+    input.addEventListener("keydown", function (event) {
+      if ((input.selectionStart <= 2 && event.key === "Backspace") || input.selectionStart < 2) {
+        event.preventDefault();
+      }
+    });
+  }
+
+  setupPhoneNumberInput("husbandPhoneNumber");
+  setupPhoneNumberInput("wifePhoneNumber");
+
+
 });
-// Function to send data to Power Automate
+
 function sendToPowerAutomate(data) {
   const url = 'https://prod-15.uaecentral.logic.azure.com:443/workflows/602d33ca8ea64c7787c9c11454f70a62/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=QHvLiue9-exuonCOCG_N7vNUyzhM9eSFLmqjt89uTcs';
 
@@ -303,7 +248,6 @@ function toggleFields() {
 
   // Reset all fields to their default state (disabled)
   allFields.forEach(field => field.disabled = false);
-  const messageContainer = document.getElementById('messageContainer');
 
   // Get all husband fields
   const husbandFields = document.querySelectorAll('#husbandDetails, #husbandPhone, #husbandEmail, #husbandID, #husbandExpiry, #husbandSalary');
@@ -313,24 +257,31 @@ function toggleFields() {
 
   homeAddressField.disabled = false;
   commentsField.disabled = false;
+  const husbandFieldsrequired = document.querySelectorAll('#husbandName, #husbandPhoneNumber, #husbandEmail1, #husbandEmiratesID, #husbandExpiryDate, #husbandSalaryValue');
 
-  // Reset the wife's label and placeholder names to defaul
   if (maritalStatus === 'married') {
     husbandFields.forEach(field => {
       field.style.display = 'block'; // Show entire container
+    });
+
+    husbandFieldsrequired.forEach(field => {
       field.setAttribute('required', 'true'); // Ensure fields are required
     });
 
-    // Reset Wife Labels and Placeholders to Default
+
     document.getElementById('wifeNameLabel').innerText = "Wife's Full Name";
     document.getElementById('wifePhoneNumberLabel').innerText = "Wife's Phone Number";
     document.getElementById('wifeEmailLabel').innerText = "Wife's Email";
-    document.getElementById('wifeEmiratesIDLabel').innerText = "Wife's Emirates ID";
+    document.getElementById('wifeEmiratesIDLabel').innerText = "Wife's Emirates ID No.";
     document.getElementById('wifeExpiryDateLabel').innerText = "Wife's Emirates ID Expiry";
     document.getElementById('wifeSalaryLabel').innerText = "Wife's Salary";
+    document.querySelector("label[for='wife_eid_front']").textContent = "Wife's Emirates ID (Front)"
+    document.querySelector("label[for='wife_eid_back']").textContent = "Wife's Emirates ID (Back)"
+    document.querySelector("label[for='wife_salary']").textContent = "Wife's Salary Certificate"
+
 
     document.getElementById('wifeName').placeholder = "Enter wife's full name";
-    document.getElementById('wifePhoneNumber').placeholder = "Enter wife's phone number";
+    document.getElementById('wifePhoneNumber').placeholder = "05XXXXXXX";
     document.getElementById('wifeEmail').placeholder = "Enter wife's email";
     document.getElementById('wifeEmiratesID').placeholder = "Enter wife's Emirates ID number";
     document.getElementById('wifeExpiryDate').placeholder = "Enter wife's Emirates ID expiry date";
@@ -344,10 +295,12 @@ function toggleFields() {
     });
 
     // Hide Death & Divorce Certificate fields and remove 'required'
-    document.getElementById('death_certificate').closest('div').style.display = 'none';
-    document.getElementById('divorce_certificate').closest('div').style.display = 'none';
+    document.getElementById('divorce_certificate').closest('div').classList.add('hidden');
+    document.getElementById('death_certificate').closest('div').classList.add('hidden');
     document.getElementById('death_certificate').removeAttribute('required');
     document.getElementById('divorce_certificate').removeAttribute('required');
+    document.getElementById('wifeSalary').removeAttribute('required');
+    document.getElementById('wife_salary').removeAttribute('required');
 
     // Ensure correct attachments are displayed for married
     ['husband_eid_front', 'husband_eid_back', 'husband_salary'].forEach(id => {
@@ -355,22 +308,31 @@ function toggleFields() {
       element.closest('div').classList.remove('hidden');
       element.setAttribute('required', 'true'); // Ensure attachments are required
     });
+
+    ['wife_eid_front', 'wife_eid_back'].forEach(id => {
+      const element = document.getElementById(id);
+      element.setAttribute('required', 'true'); // Ensure attachments are required
+    });
   }
-
-
 
   else if (maritalStatus === 'widowed') {
     husbandFields.forEach(field => {
       field.style.display = 'none'; // Hide entire container
+      field.setAttribute('required', 'false');
+
+      field.removeAttribute('required')
+    });
+
+    husbandFieldsrequired.forEach(field => {
+      field.setAttribute('required', 'false');
+      field.removeAttribute('required')
+
     });
     // Show wife fields when divorced
     wifeFields.forEach(field => {
       field.closest('.input-box').style.display = 'block';
       field.disabled = false;
       field.setAttribute('required', 'true');
-    });
-    document.querySelectorAll('.husband-attachment').forEach(div => {
-      div.style.display = 'none';
     });
 
     // Adjust labels for divorced
@@ -380,9 +342,13 @@ function toggleFields() {
     document.getElementById('wifeEmiratesIDLabel').innerText = 'Your Emirates ID Number';
     document.getElementById('wifeExpiryDateLabel').innerText = 'Emirates ID Expiry Date';
     document.getElementById('wifeSalaryLabel').innerText = 'Your Salary';
+    document.getElementById('wifeSalary').innerText = 'Your Salary';
+    document.querySelector("label[for='wife_eid_front']").textContent = 'Your Emirates ID (Front)'
+    document.querySelector("label[for='wife_eid_back']").textContent = 'Your Emirates ID (Back)'
+    document.querySelector("label[for='wife_salary']").textContent = 'Your Salary Certificate'
 
     document.getElementById('wifeName').placeholder = 'Enter your full name';
-    document.getElementById('wifePhoneNumber').placeholder = 'Enter your phone number';
+    document.getElementById('wifePhoneNumber').placeholder = '05XXXXXXX';
     document.getElementById('wifeEmail').placeholder = 'Enter your email';
     document.getElementById('wifeEmiratesID').placeholder = 'Enter your Emirates ID number';
     document.getElementById('wifeExpiryDate').placeholder = 'Enter your Emirates ID expiry date';
@@ -398,28 +364,41 @@ function toggleFields() {
     document.getElementById('wife_eid_front').closest('div').classList.remove('hidden');
     document.getElementById('wife_eid_back').closest('div').classList.remove('hidden');
     document.getElementById('wife_salary').closest('div').classList.remove('hidden');
-
-// Show Divorce Certificate field
     document.getElementById('divorce_certificate').closest('div').classList.add('hidden');
-
-// Hide Death Certificate field (if applicable)
     document.getElementById('death_certificate').closest('div').classList.remove('hidden');
+    document.getElementById('wifeSalary').removeAttribute('required');
+    document.getElementById('wife_salary').removeAttribute('required');
 
+    ['husband_eid_front', 'husband_eid_back', 'husband_salary'].forEach(id => {
+      const element = document.getElementById(id);
+      element.setAttribute('required', 'false'); // Ensure attachments are required
+      element.removeAttribute('required')
+
+    });
+
+    ['wife_eid_front', 'wife_eid_back', 'death_certificate'].forEach(id => {
+      const element = document.getElementById(id);
+      element.setAttribute('required', 'true'); // Ensure attachments are required
+    });
 
   }
 
   else if (maritalStatus === 'divorced') {
     husbandFields.forEach(field => {
       field.style.display = 'none'; // Hide entire container
+      field.setAttribute('required', 'false');
+      field.removeAttribute('required')
+    });
+
+    husbandFieldsrequired.forEach(field => {
+      field.setAttribute('required', 'false');
+      field.removeAttribute('required')
     });
     // Show wife fields when divorced
     wifeFields.forEach(field => {
       field.closest('.input-box').style.display = 'block';
       field.disabled = false;
       field.setAttribute('required', 'true');
-    });
-    document.querySelectorAll('.husband-attachment').forEach(div => {
-      div.style.display = 'none';
     });
 
     // Adjust labels for divorced
@@ -429,9 +408,13 @@ function toggleFields() {
     document.getElementById('wifeEmiratesIDLabel').innerText = 'Your Emirates ID Number';
     document.getElementById('wifeExpiryDateLabel').innerText = 'Emirates ID Expiry Date';
     document.getElementById('wifeSalaryLabel').innerText = 'Your Salary';
+    document.querySelector("label[for='wife_eid_front']").textContent = 'Your  Emirates ID (Front)'
+    document.querySelector("label[for='wife_eid_back']").textContent = 'Your Emirates ID (Back)'
+    document.querySelector("label[for='wife_salary']").textContent = 'Your Salary Certificate'
+
 
     document.getElementById('wifeName').placeholder = 'Enter your full name';
-    document.getElementById('wifePhoneNumber').placeholder = 'Enter your phone number';
+    document.getElementById('wifePhoneNumber').placeholder = '05XXXXXXX';
     document.getElementById('wifeEmail').placeholder = 'Enter your email';
     document.getElementById('wifeEmiratesID').placeholder = 'Enter your Emirates ID number';
     document.getElementById('wifeExpiryDate').placeholder = 'Enter your Emirates ID expiry date';
@@ -447,88 +430,65 @@ function toggleFields() {
     document.getElementById('wife_eid_front').closest('div').classList.remove('hidden');
     document.getElementById('wife_eid_back').closest('div').classList.remove('hidden');
     document.getElementById('wife_salary').closest('div').classList.remove('hidden');
-
-// Show Divorce Certificate field
     document.getElementById('divorce_certificate').closest('div').classList.remove('hidden');
-
-// Hide Death Certificate field (if applicable)
     document.getElementById('death_certificate').closest('div').classList.add('hidden');
+    document.getElementById('wifeSalary').removeAttribute('required');
+    document.getElementById('wife_salary').removeAttribute('required');
 
 
+    ['husband_eid_front', 'husband_eid_back', 'husband_salary'].forEach(id => {
+      const element = document.getElementById(id);
+      element.setAttribute('required', 'false');
+      element.removeAttribute('required')
+    });
+
+    ['wife_eid_front', 'wife_eid_back', 'divorce_certificate'].forEach(id => {
+      const element = document.getElementById(id);
+      element.setAttribute('required', 'true'); // Ensure attachments are required
+    });
   }
 
-  else if (maritalStatus === 'single') {
-    disableAllFields();  // Assuming this function handles the disabling of the fields
-
-    // Marital status field is the only one enabled initially
-    const maritalStatus = document.getElementById('maritalStatus');
-    maritalStatus.disabled = false;
-    messageContainer.style.display = 'block';
-
-    setTimeout(() => {
-      messageContainer.style.display = 'none';
-    }, 7000);
-  }
-}
-
-function handleAttachments() {
-  const attachmentInput = document.getElementById("attachments");
-  const attachmentError = document.getElementById("attachmentError");
-  const attachmentList = document.getElementById("attachmentList");
-  const files = attachmentInput.files;
-
-  // Validate file count
-  if (files.length > 8) {
-    attachmentError.style.display = "block";
-    attachmentInput.setCustomValidity("You can only upload up to 8 files.");
-  } else {
-    attachmentError.style.display = "none";
-    attachmentInput.setCustomValidity("");
-  }
-
-  // Clear the previous attachment list
-  attachmentList.innerHTML = '';
-
-  // Loop through each file and display its name with a remove button
-  Array.from(files).forEach((file, index) => {
-    const fileDiv = document.createElement("div");
-    fileDiv.classList.add("file-item");
-    fileDiv.style.marginBottom = "5px"; // Optional styling
-
-    const fileName = document.createElement("span");
-    fileName.textContent = file.name;
-
-    const removeButton = document.createElement("button");
-    removeButton.textContent = "❌";
-    removeButton.style.marginLeft = "10px";
-    removeButton.style.color = "red";
-    removeButton.style.border = "none";
-    removeButton.style.background = "none";
-    removeButton.style.cursor = "pointer";
-    removeButton.onclick = () => removeAttachment(file, index);
-
-    fileDiv.appendChild(fileName);
-    fileDiv.appendChild(removeButton);
-    attachmentList.appendChild(fileDiv);
-  });
-}
-
-function removeAttachment(file, index) {
-  const attachmentInput = document.getElementById("attachments");
-  const dataTransfer = new DataTransfer(); // To handle file list manipulation
-
-  // Loop through the current files and re-add to DataTransfer except the file to remove
-  Array.from(attachmentInput.files).forEach((f, i) => {
-    if (i !== index) {
-      dataTransfer.items.add(f);
+// Function to add a red asterisk (*) after the label text
+  function addRedAsterisk(labelId) {
+    const label = document.getElementById(labelId);
+    if (label && !label.querySelector('.required-star')) {  // Prevent duplicates
+      label.innerHTML += `<span class="required-star" style="color: red;"> *</span>`;
     }
-  });
+  }
 
-  // Update the input with the modified file list
-  attachmentInput.files = dataTransfer.files;
+  if (maritalStatus === 'married') {
+    // Add red asterisk to wife-related required fields
+    ['wifeNameLabel', 'wifePhoneNumberLabel', 'wifeEmailLabel', 'wifeEmiratesIDLabel',
+      'wifeExpiryDateLabel'].forEach(addRedAsterisk);
 
-  // Refresh the displayed list
-  handleAttachments();
+    // Add red asterisk to required file uploads
+    ["wife_eid_front", "wife_eid_back", "husband_eid_front", "husband_eid_back", "husband_salary"].forEach(id => {
+      document.querySelector(`label[for='${id}']`).innerHTML += `<span class="required-star" style="color: red;"> *</span>`;
+    });
+  }
+
+  else if (maritalStatus === 'widowed') {
+    // Add red asterisk to personal required fields
+    ['wifeNameLabel', 'wifePhoneNumberLabel', 'wifeEmailLabel', 'wifeEmiratesIDLabel',
+      'wifeExpiryDateLabel'].forEach(addRedAsterisk);
+
+    // Add red asterisk to widow-specific required file uploads
+    ["wife_eid_front", "wife_eid_back", "death_certificate"].forEach(id => {
+      document.querySelector(`label[for='${id}']`).innerHTML += `<span class="required-star" style="color: red;"> *</span>`;
+    });
+  }
+
+  else if (maritalStatus === 'divorced') {
+    // Add red asterisk to personal required fields
+    ['wifeNameLabel', 'wifePhoneNumberLabel', 'wifeEmailLabel', 'wifeEmiratesIDLabel',
+      'wifeExpiryDateLabel'].forEach(addRedAsterisk);
+
+    // Add red asterisk to divorce-specific required file uploads
+    ["wife_eid_front", "wife_eid_back", "divorce_certificate"].forEach(id => {
+      document.querySelector(`label[for='${id}']`).innerHTML += `<span class="required-star" style="color: red;"> *</span>`;
+    });
+  }
+
 }
 
 
@@ -536,6 +496,7 @@ function validateZakat() {
   const zakatFund = document.querySelector('input[name="zakatFund"]:checked');
   const zakatMessage = document.querySelector('#zakatMessage');
   const nationalitySelection = document.querySelector('#nationalitySelection');
+  const formContent = document.querySelector('#content'); // Hide the entire form
 
   if (!zakatFund) {
     alert("Please select whether you are part of the Zakat fund.");
@@ -547,27 +508,24 @@ function validateZakat() {
     nationalitySelection.style.display = 'block'; // Show nationality selection
     document.querySelector('#zakatSelection').style.display = 'none'; // Hide Zakat question
   } else {
+    document.querySelector('#zakatSelection').style.display = 'none'; // Hide Zakat question
     zakatMessage.style.display = 'block'; // Show error message
+    nationalitySelection.style.display = 'none'; // Hide nationality selection
+    formContent.style.display = 'none'; // Hide form content
   }
 }
 
 function validateNationality() {
-  const nationality = document.querySelector('input[name="nationality"]:checked');
-  const nationalityMessage = document.querySelector('#nationalityMessage');
+  const nationality = document.getElementById('countryDropdown').value; // Get selected value
   const formContent = document.querySelector('#content');
 
   if (!nationality) {
     alert("Please select your nationality.");
     return;
   }
+  formContent.style.display = 'block'; // Show form
+  document.querySelector('#nationalitySelection').style.display = 'none'; // Hide nationality selection
 
-  if (nationality.value === 'pakistani') {
-    nationalityMessage.style.display = 'none'; // Hide error message
-    formContent.style.display = 'block'; // Show form
-    document.querySelector('#nationalitySelection').style.display = 'none'; // Hide nationality selection
-  } else {
-    nationalityMessage.style.display = 'block'; // Show error message
-  }
 }
 
 
@@ -592,3 +550,51 @@ function ensurePadding(base64) {
   }
   return base64;
 }
+
+function populateCountries() {
+  fetch("./countries.json")  // Assuming 'countries.json' is in the same directory
+    .then(response => response.json())
+    .then(countries => {
+      const dropdown = document.getElementById("countryDropdown");
+
+      // Sort countries alphabetically by name
+      const sortedCountries = countries.sort((a, b) => a.name.localeCompare(b.name));
+
+      sortedCountries.forEach(country => {
+        const option = document.createElement("option");
+        option.value = country.code;  // Use country code as the value
+        option.textContent = `${country.name} (${country.code})`;  // Display country name with code
+        dropdown.appendChild(option);
+      });
+    })
+    .catch(error => console.error("Error loading countries:", error));
+}
+
+populateCountries()
+function formatEmiratesID(element) {
+  const input = document.getElementById(element);
+  let value = input.value.replace(/\D/g, ''); // Remove any non-digit characters
+  let formattedValue = '';
+
+  // Add dashes at appropriate positions
+  for (let i = 0; i < value.length; i++) {
+    if (i === 3 || i === 7 || i === 14) { // Add dash after 3rd, 7th, and 14th digits
+      formattedValue += '-';
+    }
+    formattedValue += value[i];
+  }
+
+  input.value = formattedValue.slice(0, 19); // Limit the length to 19 characters
+}
+
+function isNumberKey(event) {
+  // Allow only numbers (0-9) and control keys (Backspace, Delete, Arrow keys)
+  if (event.key >= "0" && event.key <= "9") {
+    return true;
+  }
+  if (event.key === "Backspace" || event.key === "Delete" || event.key === "ArrowLeft" || event.key === "ArrowRight") {
+    return true;
+  }
+  return false; // Block everything else
+}
+
